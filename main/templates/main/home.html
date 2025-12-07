@@ -1052,26 +1052,36 @@
 
     let actionHtml = "";
     if (qtyInCart > 0) {
-      actionHtml = `
-        <div class="cart-qty-control" data-product-id="${product.id}"
-             style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:10px;width:100%;">
-          <button class="qty-btn minus"
-                  style="background:#ff6b6b;color:white;border:none;border-radius:50%;width:36px;height:36px;font-weight:bold;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;"
-                  onclick="event.stopPropagation(); changeCartQuantity(${product.id}, -1)">-</button>
-          <button class="qty-btn plus"
-                  style="background:#4caf50;color:white;border:none;border-radius:50%;width:36px;height:36px;font-weight:bold;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;"
-                  onclick="event.stopPropagation(); changeCartQuantity(${product.id}, 1)">+</button>
-        </div>
-      `;
-    } else {
-      actionHtml = `
-        <button class="add-to-cart-btn"
-                style="display:block;margin:15px auto;padding:12px 24px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border:none;border-radius:25px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.2);width:100%;"
-                onclick="event.stopPropagation(); handleAddToCartFromCard(this, ${product.id}, '${safeName}', ${priceNum}, '${image}', ${canOrder ? "true" : "false"}, ${discountPct})"
-                ${!canOrder ? "disabled" : ""}>
-          <i class="fas fa-cart-plus me-2"></i>${canOrder ? "Add to Cart" : "Cannot Order"}
-        </button>
-      `;
+  actionHtml = `
+    <div class="cart-qty-control" data-product-id="${product.id}"
+         style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:10px;width:100%;">
+      <button class="qty-btn minus"
+              style="background:#ff6b6b;color:white;border:none;border-radius:50%;width:36px;height:36px;font-weight:bold;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;"
+              onclick="event.stopPropagation(); changeCartQuantity(${product.id}, -1)">-</button>
+
+      <span class="qty-number"
+            style="min-width:28px;text-align:center;font-size:1.1rem;font-weight:600;color:#333;">
+        ${qtyInCart}
+      </span>
+
+      <button class="qty-btn plus"
+              style="background:#4caf50;color:white;border:none;border-radius:50%;width:36px;height:36px;font-weight:bold;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;"
+              onclick="event.stopPropagation(); changeCartQuantity(${product.id}, 1)">+</button>
+    </div>
+  `;
+}
+ else {
+  const canOrderText = "{% trans 'Add to Cart' %}";
+  const cannotOrderText = "{% trans 'Cannot Order' %}";
+
+  actionHtml = `
+    <button class="add-to-cart-btn"
+            style="display:block;margin:15px auto;padding:12px 24px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border:none;border-radius:25px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.2);width:100%;"
+            onclick="event.stopPropagation(); handleAddToCartFromCard(this, ${product.id}, '${safeName}', ${priceNum}, '${image}', ${canOrder ? "true" : "false"}, ${discountPct})"
+            ${!canOrder ? "disabled" : ""}>
+      <i class="fas fa-cart-plus me-2"></i>${canOrder ? canOrderText : cannotOrderText}
+    </button>
+  `;
     }
 
     html += `
@@ -1109,12 +1119,22 @@
           </a>
 
           <div class="product-price" style="margin:8px 0;">
-            <span class="current-price" style="font-size:1.2rem;font-weight:700;">${price}</span>
-            ${discountPct > 0 && basePrice ? `
-              <span style="text-decoration:line-through;color:#aaa;margin-left:8px;font-size:0.9rem;">$${basePrice.toFixed(2)}</span>
-              <span style="margin-left:6px;font-size:0.8rem;color:#ff5252;font-weight:bold;">-${discountPct}%</span>
-            ` : ""}
-          </div>
+  <span class="current-price" style="font-size:1.2rem;font-weight:700;">
+    د.ل${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+  </span>
+  ${
+    discountPct > 0 && basePrice
+      ? `
+        <span style="text-decoration: line-through; color: #aaa; margin-left: 8px; font-size: 0.9rem;">
+          د.ل${basePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </span>
+        <span style="margin-left: 6px; font-size: 0.8rem; color: #ff5252; font-weight: bold;">
+          -${discountPct}%
+        </span>
+      `
+      : ""
+  }
+</div>
 
           <div class="product-actions-row" style="margin-top:auto;pt-15">
             ${actionHtml}
@@ -1275,14 +1295,14 @@ window.addEventListener("resize", () => {
           if (discountPct > 0 && discountPct <= 100) {
             effectivePrice = basePrice * (1 - discountPct / 100);
           }
-          priceHtml += `<h3 class="text-primary">$${effectivePrice.toFixed(
+          priceHtml += `<h3 class="text-primary">د.ل${effectivePrice.toFixed(
             2
           )}</h3>`;
           if (discountPct > 0 && discountPct <= 100) {
             priceHtml += `
               <p class="mb-1">
                 <span class="text-muted text-decoration-line-through me-2">
-                  $${basePrice.toFixed(2)}
+                  د.ل${basePrice.toFixed(2)}
                 </span>
                 <span class="badge bg-danger">-${discountPct}%</span>
               </p>

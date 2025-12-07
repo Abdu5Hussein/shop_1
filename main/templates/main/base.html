@@ -23,6 +23,8 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 
     <!-- Font Awesome -->
     <link
@@ -56,6 +58,9 @@
         --navbar-bg: rgba(255, 255, 255, 0); /* top of page */
         --navbar-bg-scrolled: rgba(255, 255, 255, 0.98);
         --navbar-text-color: #1e293b;
+        
+        --bottom-navbar-bg: rgba(255, 255, 255, 0.98);
+        --bottom-navbar-border: rgba(0, 0, 0, 0.08);
 
         --card-bg: #ffffff;
         --card-border-color: rgba(0, 0, 0, 0.05);
@@ -87,6 +92,9 @@
         --navbar-bg: rgba(15, 23, 42, 0); /* transparent but dark-ish */
         --navbar-bg-scrolled: rgba(15, 23, 42, 0.98);
         --navbar-text-color: #e5e7eb;
+        
+        --bottom-navbar-bg: rgba(15, 23, 42, 0.98);
+        --bottom-navbar-border: rgba(148, 163, 184, 0.15);
 
         --card-bg: #0b1120; /* slate-950-ish */
         --card-border-color: rgba(148, 163, 184, 0.4);
@@ -110,6 +118,7 @@
         line-height: 1.6;
         color: var(--text-color);
         background-color: var(--bg-color);
+        padding-bottom: 70px; /* Space for bottom navbar on mobile */
       }
 
       /* LTR / RTL helpers */
@@ -118,20 +127,19 @@
         text-align: left;
       }
 
-      
-
       body.rtl {
         direction: rtl;
         text-align: right;
       }
 
-      /* Navbar Styles */
+      /* ===== DESKTOP NAVBAR ===== */
       .navbar {
-        background: var(--navbar-bg) !important; /* fully transparent */
+        background: var(--navbar-bg) !important;
         backdrop-filter: blur(0);
         box-shadow: none;
         padding: 1rem 0;
         transition: all 0.3s ease;
+        z-index: 1000;
       }
 
       .navbar-brand {
@@ -160,27 +168,93 @@
         background: rgba(37, 99, 235, 0.1);
       }
 
-      /* Cart Icon in Navbar */
-      .cart-icon-wrapper {
-        position: relative;
-        margin-left: 15px;
+      /* ===== MOBILE BOTTOM NAVBAR ===== */
+      .bottom-navbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bottom-navbar-bg);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid var(--bottom-navbar-border);
+        z-index: 999;
+        padding: 8px 0;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        display: none; /* Hidden by default, shown on mobile */
       }
 
-      .cart-badge {
+      .bottom-navbar-items {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 0 10px;
+      }
+
+      .bottom-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        border-radius: 12px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        flex: 1;
+        min-height: 60px;
+        position: relative;
+      }
+
+      .bottom-nav-item:hover {
+        background: rgba(var(--primary-rgb, 252, 202, 38), 0.1);
+        transform: translateY(-2px);
+      }
+
+      .bottom-nav-item.active {
+        color: var(--primary);
+        background: rgba(var(--primary-rgb, 252, 202, 38), 0.1);
+      }
+
+      .bottom-nav-icon {
+        font-size: 1.3rem;
+        margin-bottom: 4px;
+        transition: all 0.3s ease;
+      }
+
+      .bottom-nav-text {
+        font-size: 0.7rem;
+        font-weight: 600;
+        opacity: 0.8;
+        transition: all 0.3s ease;
+      }
+
+      .bottom-nav-item.active .bottom-nav-icon {
+        transform: translateY(-2px);
+        filter: drop-shadow(0 2px 4px rgba(252, 202, 38, 0.3));
+      }
+
+      .bottom-nav-item.active .bottom-nav-text {
+        opacity: 1;
+        font-weight: 700;
+      }
+
+      .cart-badge-bottom {
         position: absolute;
-        top: -8px;
-        right: -8px;
-        background: var(--primary);
+        top: 5px;
+        right: 20%;
+        background: linear-gradient(135deg, #ef4444, #dc2626);
         color: white;
         border-radius: 50%;
-        width: 20px;
-        height: 20px;
+        min-width: 18px;
+        height: 18px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.75rem;
-        font-weight: 600;
-        display: none;
+        font-size: 0.65rem;
+        font-weight: 700;
+        border: 2px solid var(--bottom-navbar-bg);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
       }
 
       /* Main Content */
@@ -243,6 +317,7 @@
         );
         color: white;
       }
+      
       /* Theme-aware sections */
       .section-surface {
         background-color: var(--bg-color);
@@ -330,6 +405,29 @@
         background-color: var(--primary);
         color: #fff;
         border-color: var(--primary);
+      }
+
+      /* Cart Icon in Desktop Navbar */
+      .cart-icon-wrapper {
+        position: relative;
+        margin-left: 15px;
+      }
+
+      .cart-badge {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: var(--primary);
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: none;
       }
 
       /* Cart Modal Styles */
@@ -485,7 +583,7 @@
         justify-content: center;
         cursor: pointer;
         transition: all 0.2s ease;
-        color: var(--text-color);
+        color: var(--danger);
       }
 
       .quantity-btn:hover {
@@ -638,7 +736,7 @@
       /* ===== ATTRACTIVE MOBILE CART BUTTON ===== */
       .mobile-cart-button {
         position: fixed;
-        bottom: 20px;
+        bottom: 80px; /* Above bottom navbar */
         right: 20px;
         width: 70px;
         height: 70px;
@@ -783,7 +881,7 @@
       /* Cart added notification */
       .cart-added-notification {
         position: fixed;
-        bottom: 100px;
+        bottom: 140px; /* Above mobile cart button and navbar */
         right: 20px;
         background: linear-gradient(135deg, #10b981, #059669);
         color: white;
@@ -864,10 +962,39 @@
         display: none;
       }
 
-      /* Mobile Responsive */
+      /* ===== RESPONSIVE STYLES ===== */
       @media (max-width: 768px) {
+        body {
+          padding-bottom: 60px; /* Space for bottom navbar */
+        }
+
         .main-content {
           padding: 1rem 20px;
+          margin-bottom: 20px;
+        }
+
+        /* Hide desktop navbar items on mobile */
+        .navbar-nav {
+          display: none !important;
+        }
+
+        .lang-switcher,
+        #themeToggle {
+          display: none !important;
+        }
+
+        /* Show bottom navbar on mobile */
+        .bottom-navbar {
+          display: block;
+        }
+
+        /* Adjust navbar for mobile */
+        .navbar {
+          padding: 0.5rem 0;
+        }
+
+        .navbar-toggler {
+          display: none; /* Hide toggler since we have bottom nav */
         }
 
         /* Cart modal hidden by default */
@@ -907,34 +1034,56 @@
           z-index: 10001;
         }
 
-        /* Only show mobile cart button */
+        /* Show mobile cart button above bottom navbar */
         .mobile-cart-button {
           display: flex !important;
           z-index: 10003;
+          bottom: 80px; /* Above bottom navbar */
         }
 
-        /* Optional: hide mobile cart notifications if not needed */
+        /* Adjust notification position */
         .cart-added-notification {
-          display: none;
+          bottom: 140px; /* Above mobile cart button */
         }
 
         .swipe-indicator {
           display: block;
         }
-      }
-      
 
-      /* Desktop - keep modal visible normally */
+        /* Footer adjustments */
+        .footer {
+          margin-bottom: 60px; /* Space above bottom navbar */
+        }
+      }
+
+      /* Desktop styles */
       @media (min-width: 769px) {
+        /* Hide mobile elements on desktop */
+        .bottom-navbar,
         .mobile-cart-button,
         .cart-added-notification {
           display: none !important;
         }
 
+        /* Show desktop navbar items */
+        .navbar-nav {
+          display: flex !important;
+        }
+
+        .lang-switcher,
+        #themeToggle {
+          display: flex !important;
+        }
+
+        /* Keep cart modal visible normally */
         .cart-modal {
           display: flex !important;
           bottom: auto;
           height: 100vh;
+        }
+
+        body {
+          padding-bottom: 0; /* Remove mobile padding */
         }
       }
 
@@ -952,8 +1101,8 @@
   <body
     class="{% if request.LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}"
   >
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-transparent">
+    <!-- Desktop Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-transparent d-none d-lg-block">
       <div class="container">
         <a
           class="navbar-brand d-flex align-items-center"
@@ -1036,7 +1185,6 @@
                 <a class="nav-link" href="#" id="cartIcon">
                   <i class="fas fa-shopping-cart"></i>
                 </a>
-
                 <span class="cart-badge" id="cartBadge">0</span>
               </div>
             </li>
@@ -1084,6 +1232,103 @@
       </div>
     </nav>
 
+    <!-- Mobile Bottom Navigation -->
+    <nav class="bottom-navbar d-lg-none">
+      <div class="bottom-navbar-items">
+        <a href="{% url 'home' %}" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
+          <i class="fas fa-home bottom-nav-icon"></i>
+          <span class="bottom-nav-text">{% trans "Home" %}</span>
+        </a>
+        
+        <a href="{% url 'shop' %}" class="bottom-nav-item {% if 'shop' in request.path %}active{% endif %}">
+          <i class="fas fa-store bottom-nav-icon"></i>
+          <span class="bottom-nav-text">{% trans "Shop" %}</span>
+        </a>
+        
+        <a href="#" class="bottom-nav-item" id="mobileCartNav" onclick="showCart(); return false;">
+          <i class="fas fa-shopping-cart bottom-nav-icon"></i>
+          <span class="bottom-nav-text">{% trans "Cart" %}</span>
+          <span class="cart-badge-bottom" id="bottomCartBadge" style="display: none">0</span>
+        </a>
+        
+        {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="bottom-nav-item {% if 'dashboard' in request.path %}active{% endif %}">
+          <i class="fas fa-user-circle bottom-nav-icon"></i>
+          <span class="bottom-nav-text">{% trans "Account" %}</span>
+        </a>
+        {% else %}
+        <a href="{% url 'login' %}" class="bottom-nav-item {% if 'login' in request.path %}active{% endif %}">
+          <i class="fas fa-sign-in-alt bottom-nav-icon"></i>
+          <span class="bottom-nav-text">{% trans "Login" %}</span>
+        </a>
+        {% endif %}
+        
+        <a href="#" class="bottom-nav-item" onclick="toggleMoreMenu()">
+          <i class="fas fa-ellipsis-h bottom-nav-icon"></i>
+          <span class="bottom-nav-text">{% trans "More" %}</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- More Menu Modal for Mobile -->
+    <div class="modal fade" id="moreMenuModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-bottom">
+        <div class="modal-content modern-modal" style="border-radius: 20px 20px 0 0;">
+          <div class="modal-header">
+            <h5 class="modal-title">{% trans "More Options" %}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0">
+            <div class="list-group list-group-flush">
+              <a href="{% url 'about' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                <i class="fas fa-info-circle me-3 text-primary"></i>
+                <span>{% trans "About Us" %}</span>
+              </a>
+              <a href="{% url 'contact' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+                <i class="fas fa-envelope me-3 text-primary"></i>
+                <span>{% trans "Contact Us" %}</span>
+              </a>
+              {% if user.is_authenticated %}
+              <a href="{% url 'logout' %}" class="list-group-item list-group-item-action d-flex align-items-center text-danger">
+                <i class="fas fa-sign-out-alt me-3"></i>
+                <span>{% trans "Logout" %}</span>
+              </a>
+              {% endif %}
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{% trans "Theme" %}</span>
+                <button type="button" id="mobileThemeToggle" class="btn btn-outline-secondary btn-sm">
+                  <i class="fa-solid fa-moon"></i>
+                </button>
+              </div>
+              <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span>{% trans "Language" %}</span>
+                  <div>
+                    <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                      {% csrf_token %}
+                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                      <button type="submit" name="language" value="ar" 
+                        class="btn btn-outline-secondary btn-sm {% if request.LANGUAGE_CODE == 'ar' %}active{% endif %}">
+                        عربي
+                      </button>
+                    </form>
+                    <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                      {% csrf_token %}
+                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                      <button type="submit" name="language" value="en" 
+                        class="btn btn-outline-secondary btn-sm {% if request.LANGUAGE_CODE == 'en' %}active{% endif %}">
+                        EN
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Main Content -->
     <div class="main-content mt-5 pt-4">{% block content %}{% endblock %}</div>
 
@@ -1117,7 +1362,7 @@
               </li>
               <li>
                 <a
-                  href="{% url 'products' %}"
+                  href="{% url 'shop' %}"
                   class="text-light text-decoration-none"
                   >{% trans "Products" %}</a
                 >
@@ -1225,7 +1470,7 @@
         <div class="cart-summary" id="cartSummary" style="display: none">
           <div class="cart-row">
             <span>{% trans "Subtotal" %}</span>
-            <span id="cartSubtotal">$0.00</span>
+            <span id="cartSubtotal">د.ل0.00</span>
           </div>
           <div class="cart-row">
             <span>{% trans "Shipping" %}</span>
@@ -1233,7 +1478,7 @@
           </div>
           <div class="cart-row cart-total">
             <span>{% trans "Total" %}</span>
-            <span id="cartTotal">$0.00</span>
+            <span id="cartTotal">د.ل0.00</span>
           </div>
         </div>
 
@@ -1270,7 +1515,7 @@
         </div>
         <div class="cart-notification-subtitle" id="cartNotificationSubtitle">
           <span id="notificationItemCount">1</span> {% trans "item(s)" %} -
-          $<span id="notificationItemPrice">0.00</span>
+          د.ل<span id="notificationItemPrice">0.00</span>
         </div>
       </div>
       <button class="cart-notification-close" onclick="hideCartNotification()">
@@ -1286,100 +1531,106 @@
       </div>
     </div>
 
-    <!-- Checkout Modal -->
-    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content modern-modal">
-          <div class="modal-header bg-primary text-white">
-            <h5 class="modal-title">
-              <i class="fas fa-shopping-cart me-2"></i>{% trans "Checkout" %}
-            </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
+   <!-- Checkout Modal -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down">
+    <div class="modal-content shadow-lg rounded-4 border-0">
+      <div class="modal-header bg-gradient-primary text-white py-3 rounded-top-4">
+        <h5 class="modal-title">
+          <i class="fas fa-shopping-cart me-2"></i> {% trans "Checkout" %}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form id="checkoutForm" class="row g-3">
+          <!-- Name -->
+          <div class="col-12">
+            <label for="customerName" class="form-label">{% trans "Your Name" %}</label>
+            <input type="text" class="form-control form-control-lg" id="customerName" required>
           </div>
-          <div class="modal-body">
-            <form id="checkoutForm">
-              <div class="mb-3">
-                <label for="customerName" class="form-label"
-                  >{% trans "Your Name" %}</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="customerName"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="shippingCity" class="form-label">
-                  {% trans "City" %}
-                </label>
-                <select class="form-select" id="shippingCity" required>
-                  <option value="">{% trans "Select City" %}</option>
-                </select>
 
-                <div
-                  id="cityDeliveryInfo"
-                  class="form-text mt-1"
-                  style="display: none"
-                >
-                  {% trans "Delivery fee:" %}
-                  <span id="cityDeliveryFee"></span>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label for="shippingAddress" class="form-label"
-                  >{% trans "Address" %}</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="shippingAddress"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="shippingPhone" class="form-label"
-                  >{% trans "Phone Number" %}</label
-                >
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="shippingPhone"
-                  required
-                  pattern="[0-9]{6,15}"
-                />
-              </div>
-            </form>
-            <div
-              id="checkoutError"
-              class="text-danger small"
-              style="display: none"
-            ></div>
+          <!-- City -->
+          <div class="col-12 col-md-6">
+            <label for="shippingCity" class="form-label">{% trans "City" %}</label>
+            <select class="form-select form-select-lg" id="shippingCity" required>
+              <option value="">{% trans "Select City" %}</option>
+            </select>
+            <div id="cityDeliveryInfo" class="form-text mt-1 text-muted" style="display: none;">
+              {% trans "Delivery fee:" %} <span id="cityDeliveryFee"></span>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              {% trans "Cancel" %}
-            </button>
-            <button type="button" class="btn btn-primary" id="submitCheckout">
-              {% trans "Place Order" %}
-            </button>
+
+          <!-- Phone -->
+          <div class="col-12 col-md-6">
+            <label for="shippingPhone" class="form-label">{% trans "Phone Number" %}</label>
+            <input type="tel" class="form-control form-control-lg" id="shippingPhone" required pattern="[0-9]{6,15}">
           </div>
-        </div>
+
+          <!-- Address -->
+          <div class="col-12">
+            <label for="shippingAddress" class="form-label">{% trans "Address" %}</label>
+            <input type="text" class="form-control form-control-lg" id="shippingAddress" required>
+          </div>
+        </form>
+        <div id="checkoutError" class="text-danger small mt-2" style="display: none"></div>
+      </div>
+      <div class="modal-footer border-0 pt-0 pb-4 d-flex justify-content-between flex-wrap">
+        <button type="button" class="btn btn-outline-secondary btn-lg mb-2" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+        <button type="button" class="btn btn-primary btn-lg mb-2" id="submitCheckout">{% trans "Place Order" %}</button>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Custom CSS -->
+<style>
+  /* Modal header gradient */
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, #6f42c1, #6610f2);
+  }
+
+  /* Form input focus */
+  .form-control:focus {
+    border-color: #6610f2;
+    box-shadow: 0 0 0 0.25rem rgba(102,16,242,0.25);
+  }
+
+  /* Modal for mobile fullscreen */
+  @media (max-width: 576px) {
+    #checkoutModal .modal-content {
+      border-radius: 0;
+      height: 100%;
+    }
+  }
+
+  /* Button hover effects */
+  .btn-primary {
+    background-color: #6610f2;
+    border-color: #6610f2;
+    transition: all 0.3s ease;
+  }
+  .btn-primary:hover {
+    background-color: #5a0dcf;
+    border-color: #5a0dcf;
+  }
+  .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+  }
+
+  /* Rounded modal corners */
+  .rounded-4 {
+    border-radius: 1rem !important;
+  }
+  .rounded-top-4 {
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+  }
+</style>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ 
     <!-- AOS Animation -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
@@ -1397,10 +1648,19 @@
 
       function updateCartUI() {
         const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+        
+        // Update desktop cart badge
         const cartBadge = document.getElementById("cartBadge");
         if (cartBadge) {
           cartBadge.textContent = cartCount;
           cartBadge.style.display = cartCount > 0 ? "flex" : "none";
+        }
+
+        // Update mobile bottom navbar cart badge
+        const bottomCartBadge = document.getElementById("bottomCartBadge");
+        if (bottomCartBadge) {
+          bottomCartBadge.textContent = cartCount;
+          bottomCartBadge.style.display = cartCount > 0 ? "flex" : "none";
         }
 
         // Update mobile cart button
@@ -1433,9 +1693,6 @@
         }
         updateCartUI();
         cartInitialized = true;
-
-        // Update mobile cart button on init
-        updateMobileCartButton();
       }
 
       function showCart() {
@@ -1447,26 +1704,12 @@
 
         // Hide cart notification when cart opens
         hideCartNotification();
-
-        // Add subtle animation to cart button on mobile
-        const button = document.getElementById("mobileCartButton");
-        if (button && window.innerWidth < 769) {
-          button.style.transform = "scale(0.9)";
-          setTimeout(() => {
-            button.style.transform = "scale(1)";
-          }, 300);
-        }
       }
 
       function hideCart() {
         document.getElementById("cartModal").classList.remove("active");
         document.getElementById("cartOverlay").classList.remove("active");
         document.body.style.overflow = "auto";
-
-        // Bounce cart button when cart closes on mobile
-        setTimeout(() => {
-          bounceCartButton();
-        }, 300);
       }
 
       function updateCartModal() {
@@ -1516,18 +1759,19 @@
             <div class="cart-item-info">
               <div class="cart-item-name">${item.name}</div>
               <div class="cart-item-price">
-                $${effectivePrice.toFixed(2)}
-                ${
-                  discountPct > 0 && basePrice
-                    ? `
-                      <span style="text-decoration:line-through;color:#aaa;font-size:0.85rem;margin-left:6px;">
-                        $${basePrice.toFixed(2)}
-                      </span>
-                      <span class="badge bg-danger ms-2">-${discountPct}%</span>
-                    `
-                    : ""
-                }
-              </div>
+  د.ل${effectivePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+  ${
+    discountPct > 0 && basePrice
+      ? `
+        <span style="text-decoration: line-through; color: #aaa; font-size: 0.85rem; margin-left: 6px;">
+          د.ل${basePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+        </span>
+        <span class="badge bg-danger ms-2">-${discountPct}%</span>
+      `
+      : ""
+  }
+</div>
+
               <div class="cart-item-controls">
                 <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">
                   <i class="fas fa-minus"></i>
@@ -1553,10 +1797,10 @@
           cartSummary.style.display = "block";
           document.getElementById(
             "cartSubtotal"
-          ).textContent = `$${subtotal.toFixed(2)}`;
+          ).textContent = `د.ل${subtotal.toFixed(2)}`;
           document.getElementById(
             "cartTotal"
-          ).textContent = `$${subtotal.toFixed(2)}`;
+          ).textContent = `د.ل${subtotal.toFixed(2)}`;
         }
         if (cartActions) cartActions.style.display = "flex";
       }
@@ -1567,12 +1811,8 @@
         let productId = cart[index].id;
 
         if (value !== null) {
-          // User typed directly in the input
           const newQuantity = parseInt(value, 10);
-
-          // If not a number → reset to previous value
           if (isNaN(newQuantity)) {
-            // just reset the input visually
             const inputs = document.querySelectorAll(".quantity-input");
             if (inputs[index]) {
               inputs[index].value = cart[index].quantity;
@@ -1580,21 +1820,18 @@
             return;
           }
 
-          // If 0 → remove from cart and restore "Add to Cart" on cards
           if (newQuantity === 0) {
-            removeFromCart(index); // updates cart + modal + badge
-            changeCartQuantity(productId, 0); // sync product card (show Add button again)
+            removeFromCart(index);
+            changeCartQuantity(productId, 0);
             return;
           }
 
-          // If > 0 → set new quantity
           if (newQuantity > 0) {
             cart[index].quantity = newQuantity;
           } else {
             return;
           }
         } else {
-          // Plus / minus buttons
           cart[index].quantity += change;
           if (cart[index].quantity < 1) {
             removeFromCart(index);
@@ -1606,8 +1843,8 @@
         saveCart();
         updateCartModal();
         updateCartUI();
-        updateMobileCartButton(); // keep mobile button in sync
-        changeCartQuantity(productId, 0); // sync product card qty / Add button
+        updateMobileCartButton();
+        changeCartQuantity(productId, 0);
       }
 
       function removeFromCart(index) {
@@ -1626,7 +1863,7 @@
         productImage = "",
         canOrder = true,
         quantity = 1,
-        discountPercentage = 0 // 👈 NEW
+        discountPercentage = 0
       ) {
         initCart();
 
@@ -1638,7 +1875,6 @@
           return;
         }
 
-        // Make sure quantity is at least 1
         quantity = parseInt(quantity, 10);
         if (isNaN(quantity) || quantity < 1) {
           quantity = 1;
@@ -1648,10 +1884,7 @@
         let isNewItem = false;
 
         if (existingItem) {
-          // increase by selected quantity
           existingItem.quantity += quantity;
-
-          // if for some reason discount not set before but now provided, set it
           if (
             (existingItem.discount_percentage === undefined ||
               existingItem.discount_percentage === null) &&
@@ -1663,10 +1896,10 @@
           cart.push({
             id: productId,
             name: productName,
-            price: productPrice, // ORIGINAL price
+            price: productPrice,
             image: productImage,
             quantity: quantity,
-            discount_percentage: Number(discountPercentage) || 0, // 👈 store discount
+            discount_percentage: Number(discountPercentage) || 0,
           });
           isNewItem = true;
         }
@@ -1680,8 +1913,6 @@
         bounceCartButton();
 
         const isMobile = window.innerWidth < 769;
-
-        // Optional: use discounted price in notification
         const basePrice = Number(productPrice) || 0;
         const discPct = Number(discountPercentage) || 0;
         let effectivePrice = basePrice;
@@ -1690,7 +1921,6 @@
         }
 
         if (isMobile) {
-          // show price AFTER discount in notification
           showCartNotification(productName, effectivePrice.toFixed(2));
 
           if (isFirstItemAdded && isNewItem) {
@@ -1706,7 +1936,7 @@
         }
       }
 
-      // ========= MOBILE CART BUTTON FUNCTIONS =========
+      // ========= MOBILE FUNCTIONS =========
       function updateMobileCartButton() {
         const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
         const countElement = document.getElementById("mobileCartCount");
@@ -1716,7 +1946,7 @@
         if (countElement) countElement.textContent = cartCount;
         if (tooltipCount) tooltipCount.textContent = cartCount;
 
-        // Show/hide button based on cart count and screen size
+        // Show/hide floating cart button based on cart count and screen size
         if (button) {
           if (window.innerWidth < 769 && cartCount > 0) {
             button.style.display = "flex";
@@ -1736,7 +1966,6 @@
 
         if (!notification || !title) return;
 
-        // Calculate cart totals **with discount**
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
         const totalPrice = cart.reduce((sum, item) => {
           const basePrice = Number(item.price) || 0;
@@ -1788,59 +2017,54 @@
         }
       }
 
-      // ========= SWIPE TO CLOSE FUNCTIONALITY =========
-      function setupSwipeToClose() {
-  const cartModal = document.getElementById("cartModal");
-  if (!cartModal || window.innerWidth >= 769) return;
-
-  let startY = 0;
-  let currentY = 0;
-  let isSwiping = false;
-
-  cartModal.addEventListener(
-    "touchstart",
-    (e) => {
-      startY = e.touches[0].clientY;
-      currentY = startY;
-      isSwiping = true;
-    },
-    { passive: true }
-  );
-
-  cartModal.addEventListener(
-    "touchmove",
-    (e) => {
-      if (!isSwiping) return;
-
-      currentY = e.touches[0].clientY;
-      const diff = currentY - startY;
-
-      // Only swipe down
-      if (diff > 0) {
-        cartModal.style.transform = `translateY(${diff}px)`;
+      function toggleMoreMenu() {
+        const modal = new bootstrap.Modal(document.getElementById('moreMenuModal'));
+        modal.show();
       }
-    },
-    { passive: true }
-  );
 
-  cartModal.addEventListener("touchend", () => {
-    if (!isSwiping) return;
+      // ========= SWIPE TO CLOSE =========
+      function setupSwipeToClose() {
+        const cartModal = document.getElementById("cartModal");
+        if (!cartModal || window.innerWidth >= 769) return;
 
-    const diff = currentY - startY;
-    const threshold = 100; // min swipe to close
+        let startY = 0;
+        let currentY = 0;
+        let isSwiping = false;
 
-    if (diff > threshold) {
-      // Use same hideCart as X button
-      hideCart();
-    }
+        cartModal.addEventListener(
+          "touchstart",
+          (e) => {
+            startY = e.touches[0].clientY;
+            currentY = startY;
+            isSwiping = true;
+          },
+          { passive: true }
+        );
 
-    // Reset transform so next time it opens normally
-    cartModal.style.transform = "translateY(0)";
+        cartModal.addEventListener(
+          "touchmove",
+          (e) => {
+            if (!isSwiping) return;
+            currentY = e.touches[0].clientY;
+            const diff = currentY - startY;
+            if (diff > 0) {
+              cartModal.style.transform = `translateY(${diff}px)`;
+            }
+          },
+          { passive: true }
+        );
 
-    isSwiping = false;
-  });
-}
-
+        cartModal.addEventListener("touchend", () => {
+          if (!isSwiping) return;
+          const diff = currentY - startY;
+          const threshold = 100;
+          if (diff > threshold) {
+            hideCart();
+          }
+          cartModal.style.transform = "translateY(0)";
+          isSwiping = false;
+        });
+      }
 
       // ========= OTHER FUNCTIONS =========
       function addToWishlist(productId) {
@@ -1858,12 +2082,9 @@
         try {
           const res = await fetch("/cities/api/list/");
           if (!res.ok) throw new Error("Failed to load cities");
+          const data = await res.json();
 
-          const data = await res.json(); // expected: { cities: [...] }
-
-          // Reset options
           select.innerHTML = `<option value="">{% trans "Select City" %}</option>`;
-
           (data.cities || []).forEach((c) => {
             const opt = document.createElement("option");
             opt.value = c.id;
@@ -1899,87 +2120,76 @@
       }
 
       function checkout() {
-        // 1) No items? abort
         if (cart.length === 0) {
           showNotification("{% trans 'Your cart is empty!' %}", "error");
           return;
         }
 
-        // 2) Hide cart side panel
         hideCart();
-
-        // 3) Show checkout modal
         const checkoutModalEl = document.getElementById("checkoutModal");
         const checkoutModal = new bootstrap.Modal(checkoutModalEl);
         checkoutModal.show();
 
-        // 4) Bind submit handler (re-bind each time checkout is opened)
         const submitBtn = document.getElementById("submitCheckout");
         const errorDiv = document.getElementById("checkoutError");
 
-        submitBtn.onclick = async function () {
-          const nameInput = document.getElementById("customerName");
-          const citySelect = document.getElementById("shippingCity");
-          const addressInput = document.getElementById("shippingAddress");
-          const phoneInput = document.getElementById("shippingPhone");
+submitBtn.onclick = async function () {
+    const nameInput = document.getElementById("customerName");
+    const citySelect = document.getElementById("shippingCity");
+    const addressInput = document.getElementById("shippingAddress");
+    const phoneInput = document.getElementById("shippingPhone");
 
-          const name = (nameInput?.value || "").trim();
-          const cityId = citySelect ? citySelect.value : "";
-          const cityName =
-            citySelect && citySelect.selectedOptions.length
-              ? citySelect.selectedOptions[0].text
-              : "";
-          const address = (addressInput?.value || "").trim();
-          const phone = (phoneInput?.value || "").trim();
+    const name = (nameInput?.value || "").trim();
+    const cityId = citySelect ? citySelect.value : "";
+    const cityName =
+      citySelect && citySelect.selectedOptions.length
+        ? citySelect.selectedOptions[0].text
+        : "";
+    const address = (addressInput?.value || "").trim();
+    const phone = (phoneInput?.value || "").trim();
 
-          // Basic validation
-          if (
-            !name ||
-            !cityId ||
-            !address ||
-            !phone ||
-            !/^\d{6,15}$/.test(phone)
-          ) {
-            if (errorDiv) {
-              errorDiv.textContent =
+    if (!name || !cityId || !address || !phone || !/^\d{6,15}$/.test(phone)) {
+        if (errorDiv) {
+            errorDiv.textContent =
                 "{% trans 'Please enter a valid name, city, address, and phone number.' %}";
-              errorDiv.style.display = "block";
-            }
-            return;
-          }
-          if (errorDiv) {
-            errorDiv.style.display = "none";
-          }
+            errorDiv.style.display = "block";
+        }
+        return;
+    }
+    if (errorDiv) errorDiv.style.display = "none";
 
-          // 5) Compute subtotal from cart
-          let subtotal = 0;
-          cart.forEach((item) => {
-            const basePrice = Number(item.price) || 0; // original price
+    // --- Show loading ---
+    Swal.fire({
+        title: "{% trans 'Processing your order...' %}",
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    });
+
+    try {
+        let subtotal = 0;
+        cart.forEach((item) => {
+            const basePrice = Number(item.price) || 0;
             const qty = Number(item.quantity) || 0;
             const discountPct = Number(item.discount_percentage) || 0;
-
             let effectivePrice = basePrice;
             if (discountPct > 0 && discountPct <= 100) {
-              effectivePrice = basePrice * (1 - discountPct / 100);
+                effectivePrice = basePrice * (1 - discountPct / 100);
             }
-
             subtotal += effectivePrice * qty;
-          });
+        });
 
-          // 6) Get delivery fee from selected city option
-          let deliveryFee = 0;
-          if (citySelect && citySelect.selectedOptions.length > 0) {
+        let deliveryFee = 0;
+        if (citySelect && citySelect.selectedOptions.length > 0) {
             const feeStr = citySelect.selectedOptions[0].dataset.fee || "0";
             const parsedFee = parseFloat(feeStr);
-            if (!isNaN(parsedFee)) {
-              deliveryFee = parsedFee;
-            }
-          }
+            if (!isNaN(parsedFee)) deliveryFee = parsedFee;
+        }
 
-          const total = subtotal + deliveryFee;
+        const total = subtotal + deliveryFee;
 
-          // 7) Build payload for invoice API
-          const payload = {
+        const payload = {
             name,
             city_id: cityId,
             city_name: cityName,
@@ -1989,54 +2199,61 @@
             delivery_fee: deliveryFee,
             total,
             items: cart.map((item) => ({
-              product_id: item.id,
-              name: item.name,
-              quantity: item.quantity,
-              price: item.price,
-              discount_percentage: item.discount_percentage || 0,
+                product_id: item.id,
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+                discount_percentage: item.discount_percentage || 0,
             })),
-          };
+        };
 
-          // 8) Send request
-          try {
-            const res = await fetch("/api/invoice/create/", {
-              method: "POST",
-              headers: {
+        const res = await fetch("/api/invoice/create/", {
+            method: "POST",
+            headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCookie("csrftoken"),
-              },
-              body: JSON.stringify(payload),
-            });
+            },
+            body: JSON.stringify(payload),
+        });
 
-            const data = await res.json();
-            if (!res.ok) {
-              throw new Error(
-                data.error || "{% trans 'Failed to place order' %}"
-              );
-            }
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "{% trans 'Failed to place order' %}");
 
-            // 9) On success: clear cart + close modal
-            showNotification(
-              "{% trans 'Order placed successfully!' %}",
-              "success"
-            );
-            cart = [];
-            saveCart();
-            updateCartModal();
-            updateCartUI();
+        Swal.close(); // hide loading
 
-            const instance = bootstrap.Modal.getInstance(checkoutModalEl);
-            if (instance) instance.hide();
-          } catch (err) {
-            if (errorDiv) {
-              errorDiv.textContent = err.message;
-              errorDiv.style.display = "block";
-            }
-          }
-        };
+        showNotification("{% trans 'Order placed successfully!' %}", "success");
+
+Swal.fire({
+    icon: "success",
+    title: "{% trans 'Order Received' %}",
+    text: "{% trans 'Thank you! Our team will contact you soon regarding your order.' %}",
+    confirmButtonText: "{% trans 'OK' %}",
+}).then((result) => {
+    if (result.isConfirmed) {
+        // Reload the page after OK is pressed
+        window.location.reload();
+    }
+});
+
+
+        cart = [];
+        saveCart();
+        updateCartModal();
+        updateCartUI();
+
+        const instance = bootstrap.Modal.getInstance(checkoutModalEl);
+        if (instance) instance.hide();
+    } catch (err) {
+        Swal.close(); // hide loading
+        if (errorDiv) {
+            errorDiv.textContent = err.message;
+            errorDiv.style.display = "block";
+        }
+    }
+};
+
       }
 
-      // CSRF helper
       function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== "") {
@@ -2059,6 +2276,7 @@
         const STORAGE_KEY = "theme";
         const htmlEl = document.documentElement;
         const toggleBtn = document.getElementById("themeToggle");
+        const mobileToggleBtn = document.getElementById("mobileThemeToggle");
 
         function getStoredTheme() {
           return localStorage.getItem(STORAGE_KEY);
@@ -2071,23 +2289,25 @@
         function setTheme(theme) {
           htmlEl.setAttribute("data-theme", theme);
           localStorage.setItem(STORAGE_KEY, theme);
-          if (toggleBtn)
-            toggleBtn.innerHTML =
-              theme === "dark"
-                ? '<i class="fa-solid fa-sun"></i>'
-                : '<i class="fa-solid fa-moon"></i>';
+          
+          const icon = theme === "dark" ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+          
+          if (toggleBtn) toggleBtn.innerHTML = icon;
+          if (mobileToggleBtn) mobileToggleBtn.innerHTML = icon;
         }
 
         const initialTheme = getStoredTheme() || getSystemTheme();
         setTheme(initialTheme);
 
-        if (toggleBtn)
-          toggleBtn.addEventListener("click", () => {
-            const current =
-              htmlEl.getAttribute("data-theme") === "dark" ? "dark" : "light";
-            setTheme(current === "dark" ? "light" : "dark");
-            updateNavbarBackground();
-          });
+        function handleThemeToggle() {
+          const current =
+            htmlEl.getAttribute("data-theme") === "dark" ? "dark" : "light";
+          setTheme(current === "dark" ? "light" : "dark");
+          updateNavbarBackground();
+        }
+
+        if (toggleBtn) toggleBtn.addEventListener("click", handleThemeToggle);
+        if (mobileToggleBtn) mobileToggleBtn.addEventListener("click", handleThemeToggle);
 
         window.getThemeCssVar = (name) =>
           getComputedStyle(htmlEl).getPropertyValue(name).trim();
@@ -2141,12 +2361,19 @@
           mobileCartButton.addEventListener("click", function (e) {
             e.preventDefault();
             showCart();
-
-            // Add click animation
             this.style.transform = "scale(0.9)";
             setTimeout(() => {
               this.style.transform = "scale(1)";
             }, 150);
+          });
+        }
+
+        // Setup mobile cart nav click
+        const mobileCartNav = document.getElementById("mobileCartNav");
+        if (mobileCartNav) {
+          mobileCartNav.addEventListener("click", function (e) {
+            e.preventDefault();
+            showCart();
           });
         }
 
@@ -2239,6 +2466,7 @@
       window.showCart = showCart;
       window.hideCart = hideCart;
       window.hideCartNotification = hideCartNotification;
+      window.toggleMoreMenu = toggleMoreMenu;
     </script>
 
     {% block extra_js %}{% endblock %}

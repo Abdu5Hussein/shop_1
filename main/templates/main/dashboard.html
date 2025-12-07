@@ -58,7 +58,7 @@
           <i class="fas fa-question-circle"></i>
         </div>
         <div class="stats-content">
-          <h3 class="stats-number">{{ Invoices|length }}</h3>
+          <h3 class="stats-number">{{ invoices|length }}</h3>
           <p class="stats-label">{% trans "Product Inquiries" %}</p>
         </div>
       </div>
@@ -230,9 +230,9 @@
               <td>${{ invoice.subtotal }}</td>
               <!-- prettier-ignore -->
               <td>
-                {% if invoice.delivery_fee %} ${{ invoice.delivery_fee }} {% else %} $0.00 {% endif %}
+                {% if invoice.delivery_fee %} د.ل{{ invoice.delivery_fee }} {% else %} د.ل0.00 {% endif %}
               </td>
-              <td><strong>${{ invoice.total }}</strong></td>
+              <td><strong>د.ل{{ invoice.total }}</strong></td>
               <td>
                 <button
                   class="btn btn-sm btn-outline-primary"
@@ -279,7 +279,7 @@
                         {# Original price per unit #}
                         <!-- prettier-ignore -->
                         <td>
-                          ${{ item.original_price }}
+                          د.ل{{ item.original_price }}
                         </td>
 
                         {# Discount % #}
@@ -293,10 +293,10 @@
                         </td>
                         <!-- prettier-ignore -->
                         {# Discounted price per unit (already stored in item.price) #}
-                        <td>${{ item.price }}</td>
+                        <td>د.ل{{ item.price }}</td>
 
                         {# Discounted subtotal #}
-                        <td>${{ item.subtotal }}</td>
+                        <td>د.ل{{ item.subtotal }}</td>
                       </tr>
                       {% empty %}
                       <tr>
@@ -311,10 +311,10 @@
                         <td>{% trans "Delivery price" %}</td>
                         <td>—</td>
                         <td>1</td>
-                        <td>${{ invoice.delivery_fee }}</td>
+                        <td>د.ل{{ invoice.delivery_fee }}</td>
                         <td>0%</td>
-                        <td>${{ invoice.delivery_fee }}</td>
-                        <td>${{ invoice.delivery_fee }}</td>
+                        <td>د.ل{{ invoice.delivery_fee }}</td>
+                        <td>د.ل{{ invoice.delivery_fee }}</td>
                       </tr>
                       {% endif %}
                     </tbody>
@@ -404,12 +404,12 @@
               </td>
               <td>
                 <span class="fw-semibold text-primary"
-                  >${{ product.price|default:"0.00" }}</span
+                  >د.ل{{ product.price|default:"0.00" }}</span
                 >
               </td>
               <td>
                 <span class="fw-semibold text-primary"
-                  >${{ product.discount_percentage|default:"0" }}</span
+                  >د.ل{{ product.discount_percentage|default:"0" }}</span
                 >
               </td>
               <td>
@@ -537,75 +537,7 @@
     </div>
   </div>
 
-  <!-- Inquiries Section -->
-  <div class="dashboard-section mb-5" data-aos="fade-up" data-aos-delay="100">
-    <div class="section-header mb-4">
-      <h3 class="section-title">
-        <i class="fas fa-question-circle me-2 text-success"></i>
-        {% trans "Product Inquiries" %}
-      </h3>
-    </div>
-    <div class="modern-card">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle">
-          <thead class="table-light">
-            <tr>
-              <th>{% trans "User" %}</th>
-              <th>{% trans "Product" %}</th>
-              <th>{% trans "Quantity" %}</th>
-              <th>{% trans "Address" %}</th>
-              <th>{% trans "Date" %}</th>
-              <th>{% trans "Status" %}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for inquiry in inquiries %}
-            <tr>
-              <td>
-                <div class="d-flex align-items-center">
-                  <div
-                    class="user-avatar bg-primary text-white rounded-circle me-2"
-                  >
-                    {{ inquiry.user.username|first|upper }}
-                  </div>
-                  <span class="fw-semibold">{{ inquiry.user.username }}</span>
-                </div>
-              </td>
-              <td>{{ inquiry.product.name }}</td>
-              <td>
-                <span class="badge bg-primary">{{ inquiry.quantity }}</span>
-              </td>
-              <td>
-                <span
-                  class="text-truncate d-inline-block"
-                  style="max-width: 150px"
-                  title="{{ inquiry.address }}"
-                  >{{ inquiry.address }}</span
-                >
-              </td>
-              <td>
-                <small class="text-muted"
-                  >{{ inquiry.created_at|date:"M d, Y" }}</small
-                >
-              </td>
-              <td>
-                <span class="badge bg-warning">{% trans "Pending" %}</span>
-              </td>
-            </tr>
-            {% empty %}
-            <tr>
-              <td colspan="6" class="text-center py-4">
-                <i class="fas fa-inbox fa-2x text-muted mb-2"></i>
-                <p class="text-muted mb-0">{% trans "No inquiries yet" %}</p>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
+  
   <!-- Messages Section -->
   <div class="dashboard-section mb-5" data-aos="fade-up" data-aos-delay="200">
     <div class="section-header mb-4">
@@ -821,7 +753,7 @@
               </td>
               <td>
                 <span class="fw-semibold text-primary">
-                  {{ city.delivery_fee }} $
+                  {{ city.delivery_fee }} د.ل
                 </span>
               </td>
               <td>
@@ -913,7 +845,7 @@
                   step="0.01"
                   required
                 />
-                <label for="productPriceAdd">{% trans "Price ($)" %}</label>
+                <label for="productPriceAdd">{% trans "Price (د.ل)" %}</label>
               </div>
             </div>
 
@@ -1145,7 +1077,7 @@
                   step="0.01"
                   required
                 />
-                <label for="productPriceEdit">{% trans "Price ($)" %}</label>
+                <label for="productPriceEdit">{% trans "Price (د.ل)" %}</label>
               </div>
             </div>
 
@@ -1346,101 +1278,119 @@
       </div>
       <div class="modal-body p-3 p-md-4">
         <form id="branchFormAdd">
-          {% csrf_token %}
-          <div class="row g-3">
-            <div class="col-12">
-              <div class="form-floating">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="branchNameAdd"
-                  name="name"
-                  placeholder="{% trans 'Branch Name' %}"
-                  required
-                />
-                <label for="branchNameAdd">{% trans "Branch Name" %}</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating">
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="branchPhoneAdd"
-                  name="phone_number"
-                  placeholder="{% trans 'Phone Number' %}"
-                />
-                <label for="branchPhoneAdd">{% trans "Phone Number" %}</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="branchEmailAdd"
-                  name="Email_Adress"
-                  placeholder="{% trans 'Email Address' %}"
-                />
-                <label for="branchEmailAdd">{% trans "Email Address" %}</label>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="form-floating">
-                <textarea
-                  class="form-control"
-                  id="branchAddressAdd"
-                  name="address"
-                  placeholder="{% trans 'Address' %}"
-                  style="height: 80px"
-                  required
-                ></textarea>
-                <label for="branchAddressAdd">{% trans "Address" %}</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating">
-                <input
-                  type="number"
-                  step="any"
-                  class="form-control"
-                  id="branchLatitudeAdd"
-                  name="latitude"
-                  required
-                  placeholder="{% trans 'Latitude' %}"
-                />
-                <label for="branchLatitudeAdd">{% trans "Latitude" %}</label>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-floating">
-                <input
-                  type="number"
-                  step="any"
-                  class="form-control"
-                  id="branchLongitudeAdd"
-                  name="longitude"
-                  required
-                  placeholder="{% trans 'Longitude' %}"
-                />
-                <label for="branchLongitudeAdd">{% trans "Longitude" %}</label>
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="primaryBranchAdd"
-                  name="primery_branch"
-                />
-                <label class="form-check-label" for="primaryBranchAdd"
-                  >{% trans "Primary Branch" %}</label
-                >
-              </div>
-            </div>
-          </div>
-        </form>
+  {% csrf_token %}
+  <div class="row g-3">
+    <div class="col-12">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="branchNameAdd" name="name" placeholder="{% trans 'Branch Name' %}" required />
+        <label for="branchNameAdd">{% trans "Branch Name" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="tel" class="form-control" id="branchPhoneAdd" name="phone_number" placeholder="{% trans 'Phone Number' %}" />
+        <label for="branchPhoneAdd">{% trans "Phone Number" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="email" class="form-control" id="branchEmailAdd" name="Email_Adress" placeholder="{% trans 'Email Address' %}" />
+        <label for="branchEmailAdd">{% trans "Email Address" %}</label>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-floating">
+        <textarea class="form-control" id="branchAddressAdd" name="address" placeholder="{% trans 'Address' %}" style="height:80px" required></textarea>
+        <label for="branchAddressAdd">{% trans "Address" %}</label>
+      </div>
+    </div>
+    <div class="col-12 mb-3">
+  <div id="branchMapAdd" style="height: 300px; width: 100%; border:1px solid #ddd;"></div>
+</div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="number" step="any" class="form-control" id="branchLatitudeAdd" name="latitude" placeholder="{% trans 'Latitude' %}" required />
+        <label for="branchLatitudeAdd">{% trans "Latitude" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="number" step="any" class="form-control" id="branchLongitudeAdd" name="longitude" placeholder="{% trans 'Longitude' %}" required />
+        <label for="branchLongitudeAdd">{% trans "Longitude" %}</label>
+      </div>
+    </div>
+
+    <!-- New Fields -->
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="branchOpeningHoursAdd" name="opening_hours" placeholder="{% trans 'Opening Hours' %}" />
+        <label for="branchOpeningHoursAdd">{% trans "Opening Hours" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="branchClosingHoursAdd" name="closing_hours" placeholder="{% trans 'Closing Hours' %}" />
+        <label for="branchClosingHoursAdd">{% trans "Closing Hours" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="branchDayFromAdd" name="day_from" placeholder="{% trans 'Day From' %}" />
+        <label for="branchDayFromAdd">{% trans "Day From" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="text" class="form-control" id="branchDayToAdd" name="day_to" placeholder="{% trans 'Day To' %}" />
+        <label for="branchDayToAdd">{% trans "Day To" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="url" class="form-control" id="branchFacebookAdd" name="facbook_link" placeholder="{% trans 'Facebook Link' %}" />
+        <label for="branchFacebookAdd">{% trans "Facebook Link" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="url" class="form-control" id="branchInstagramAdd" name="instagram_link" placeholder="{% trans 'Instagram Link' %}" />
+        <label for="branchInstagramAdd">{% trans "Instagram Link" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="url" class="form-control" id="branchTwitterAdd" name="twitter_link" placeholder="{% trans 'Twitter Link' %}" />
+        <label for="branchTwitterAdd">{% trans "Twitter Link" %}</label>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-floating">
+        <input type="url" class="form-control" id="branchLinkedinAdd" name="linkdin_link" placeholder="{% trans 'LinkedIn Link' %}" />
+        <label for="branchLinkedinAdd">{% trans "LinkedIn Link" %}</label>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="primaryBranchAdd" name="primery_branch" />
+        <label class="form-check-label" for="primaryBranchAdd">{% trans "Primary Branch" %}</label>
+      </div>
+    </div>
+  </div>
+</form>
+
       </div>
       <div class="modal-footer">
         <button
@@ -1460,6 +1410,7 @@
 </div>
 
 <!-- Edit Branch Modal -->
+<!-- Edit Branch Modal -->
 <div
   class="modal fade"
   id="editBranchModal"
@@ -1474,119 +1425,129 @@
           <i class="fas fa-edit me-2"></i>
           {% trans "Edit Branch" %}
         </h5>
-        <button
-          type="button"
-          class="btn-close btn-close-white"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-3 p-md-4">
         <form id="branchFormEdit">
           <input type="hidden" id="branchIdEdit" />
           <div class="row g-3">
+            <!-- Basic Info -->
             <div class="col-12">
               <div class="form-floating">
-                <input
-                  type="text"
-                  class="form-control"
-                  id="branchNameEdit"
-                  name="name"
-                  placeholder="{% trans 'Branch Name' %}"
-                  required
-                />
+                <input type="text" class="form-control" id="branchNameEdit" name="name" placeholder="{% trans 'Branch Name' %}" required />
                 <label for="branchNameEdit">{% trans "Branch Name" %}</label>
               </div>
             </div>
+
             <div class="col-md-6">
               <div class="form-floating">
-                <input
-                  type="tel"
-                  class="form-control"
-                  id="branchPhoneEdit"
-                  name="phone_number"
-                  placeholder="{% trans 'Phone Number' %}"
-                />
+                <input type="tel" class="form-control" id="branchPhoneEdit" name="phone_number" placeholder="{% trans 'Phone Number' %}" />
                 <label for="branchPhoneEdit">{% trans "Phone Number" %}</label>
               </div>
             </div>
+
             <div class="col-md-6">
               <div class="form-floating">
-                <input
-                  type="email"
-                  class="form-control"
-                  id="branchEmailEdit"
-                  name="Email_Adress"
-                  placeholder="{% trans 'Email Address' %}"
-                />
+                <input type="email" class="form-control" id="branchEmailEdit" name="Email_Adress" placeholder="{% trans 'Email Address' %}" />
                 <label for="branchEmailEdit">{% trans "Email Address" %}</label>
               </div>
             </div>
+
             <div class="col-12">
               <div class="form-floating">
-                <textarea
-                  class="form-control"
-                  id="branchAddressEdit"
-                  name="address"
-                  placeholder="{% trans 'Address' %}"
-                  style="height: 80px"
-                  required
-                ></textarea>
+                <textarea class="form-control" id="branchAddressEdit" name="address" placeholder="{% trans 'Address' %}" style="height: 80px" required></textarea>
                 <label for="branchAddressEdit">{% trans "Address" %}</label>
               </div>
             </div>
+<!-- For Edit modal -->
+<div class="col-12 mb-3">
+  <div id="branchMapEdit" style="height: 300px; width: 100%; border:1px solid #ddd;"></div>
+</div>
+            <!-- Coordinates -->
             <div class="col-md-6">
               <div class="form-floating">
-                <input
-                  type="number"
-                  step="any"
-                  class="form-control"
-                  id="branchLatitudeEdit"
-                  name="latitude"
-                  required
-                  placeholder="{% trans 'Latitude' %}"
-                />
+                <input type="number" step="any" class="form-control" id="branchLatitudeEdit" name="latitude" placeholder="{% trans 'Latitude' %}" required />
                 <label for="branchLatitudeEdit">{% trans "Latitude" %}</label>
               </div>
             </div>
+
             <div class="col-md-6">
               <div class="form-floating">
-                <input
-                  type="number"
-                  step="any"
-                  class="form-control"
-                  id="branchLongitudeEdit"
-                  name="longitude"
-                  required
-                  placeholder="{% trans 'Longitude' %}"
-                />
+                <input type="number" step="any" class="form-control" id="branchLongitudeEdit" name="longitude" placeholder="{% trans 'Longitude' %}" required />
                 <label for="branchLongitudeEdit">{% trans "Longitude" %}</label>
               </div>
             </div>
+
+            <!-- Hours & Days -->
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="branchOpeningHoursEdit" name="opening_hours" placeholder="{% trans 'Opening Hours' %}" />
+                <label for="branchOpeningHoursEdit">{% trans "Opening Hours" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="branchClosingHoursEdit" name="closing_hours" placeholder="{% trans 'Closing Hours' %}" />
+                <label for="branchClosingHoursEdit">{% trans "Closing Hours" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="branchDayFromEdit" name="day_from" placeholder="{% trans 'Day From' %}" />
+                <label for="branchDayFromEdit">{% trans "Day From" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="branchDayToEdit" name="day_to" placeholder="{% trans 'Day To' %}" />
+                <label for="branchDayToEdit">{% trans "Day To" %}</label>
+              </div>
+            </div>
+
+            <!-- Social Links -->
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="url" class="form-control" id="branchFacebookEdit" name="facbook_link" placeholder="{% trans 'Facebook Link' %}" />
+                <label for="branchFacebookEdit">{% trans "Facebook Link" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="url" class="form-control" id="branchInstagramEdit" name="instagram_link" placeholder="{% trans 'Instagram Link' %}" />
+                <label for="branchInstagramEdit">{% trans "Instagram Link" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="url" class="form-control" id="branchTwitterEdit" name="twitter_link" placeholder="{% trans 'Twitter Link' %}" />
+                <label for="branchTwitterEdit">{% trans "Twitter Link" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="url" class="form-control" id="branchLinkedinEdit" name="linkdin_link" placeholder="{% trans 'LinkedIn Link' %}" />
+                <label for="branchLinkedinEdit">{% trans "LinkedIn Link" %}</label>
+              </div>
+            </div>
+
+            <!-- Primary Branch -->
             <div class="col-12">
               <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  id="primaryBranchEdit"
-                  name="primery_branch"
-                />
-                <label class="form-check-label" for="primaryBranchEdit"
-                  >{% trans "Primary Branch" %}</label
-                >
+                <input class="form-check-input" type="checkbox" id="primaryBranchEdit" name="primery_branch" />
+                <label class="form-check-label" for="primaryBranchEdit">{% trans "Primary Branch" %}</label>
               </div>
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-outline-secondary"
-          data-bs-dismiss="modal"
-        >
-          {% trans "Cancel" %}
-        </button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
         <button type="button" class="btn btn-info" id="updateBranchBtn">
           <i class="fas fa-save me-2"></i>
           {% trans "Update Branch" %}
@@ -1595,6 +1556,7 @@
     </div>
   </div>
 </div>
+
 
 <!-- Add Category Modal -->
 <div
@@ -1834,7 +1796,7 @@
               required
             />
             <label for="cityDeliveryFeeAdd"
-              >{% trans "Delivery Fee ($)" %}</label
+              >{% trans "Delivery Fee (د.ل)" %}</label
             >
           </div>
         </form>
@@ -1904,7 +1866,7 @@
               required
             />
             <label for="cityDeliveryFeeEdit"
-              >{% trans "Delivery Fee ($)" %}</label
+              >{% trans "Delivery Fee (د.ل)" %}</label
             >
           </div>
         </form>
@@ -2313,7 +2275,7 @@
             {{ item.quantity }}
           </td>
           <td style="border: 1px solid #ccc; padding: 6px">
-            ${{ item.original_price }}
+            د.ل{{ item.original_price }}
           </td>
           <!-- prettier-ignore -->
           <td style="border: 1px solid #ccc; padding: 6px">
@@ -2322,10 +2284,10 @@
             {% else %}0%{% endif %}
           </td>
           <td style="border: 1px solid #ccc; padding: 6px">
-            ${{ item.price }}
+            د.ل{{ item.price }}
           </td>
           <td style="border: 1px solid #ccc; padding: 6px">
-            ${{ item.subtotal }}
+            د.ل{{ item.subtotal }}
           </td>
         </tr>
         {% endfor %}
@@ -2336,14 +2298,14 @@
           <td style="border: 1px solid #ccc; padding: 6px">—</td>
           <td style="border: 1px solid #ccc; padding: 6px">1</td>
           <td style="border: 1px solid #ccc; padding: 6px">
-            ${{ invoice.delivery_fee }}
+            د.ل{{ invoice.delivery_fee }}
           </td>
           <td style="border: 1px solid #ccc; padding: 6px">0%</td>
           <td style="border: 1px solid #ccc; padding: 6px">
-            ${{ invoice.delivery_fee }}
+            د.ل{{ invoice.delivery_fee }}
           </td>
           <td style="border: 1px solid #ccc; padding: 6px">
-            ${{ invoice.delivery_fee }}
+            د.ل{{ invoice.delivery_fee }}
           </td>
         </tr>
         {% endif %}
@@ -2359,7 +2321,7 @@
         margin-bottom: 20px;
       "
     >
-      المجموع الكلي: ${{ invoice.total }}
+      المجموع الكلي: د.ل{{ invoice.total }}
     </div>
 
     <hr style="border: 1px dashed #ccc; margin: 20px 0" />
@@ -3427,7 +3389,78 @@
     printWindow.print();
     //printWindow.close();
   }
+
+
+  let addBranchMap, addBranchMarker;
+let editBranchMap, editBranchMarker;
+
+function initBranchMaps() {
+  // --- ADD BRANCH MAP ---
+  const addMapEl = document.getElementById("branchMapAdd");
+  if (addMapEl) {
+    const defaultLatLng = { lat: 0, lng: 0 }; // default position
+    addBranchMap = new google.maps.Map(addMapEl, {
+      center: defaultLatLng,
+      zoom: 2,
+    });
+
+    addBranchMarker = new google.maps.Marker({
+      position: defaultLatLng,
+      map: addBranchMap,
+      draggable: true,
+    });
+
+    // Update inputs when marker is dragged
+    addBranchMarker.addListener("dragend", function () {
+      document.getElementById("branchLatitudeAdd").value =
+        addBranchMarker.getPosition().lat().toFixed(6);
+      document.getElementById("branchLongitudeAdd").value =
+        addBranchMarker.getPosition().lng().toFixed(6);
+    });
+
+    // Set marker on map click
+    addBranchMap.addListener("click", function (e) {
+      addBranchMarker.setPosition(e.latLng);
+      document.getElementById("branchLatitudeAdd").value =
+        e.latLng.lat().toFixed(6);
+      document.getElementById("branchLongitudeAdd").value =
+        e.latLng.lng().toFixed(6);
+    });
+  }
+
+  // --- EDIT BRANCH MAP ---
+  const editMapEl = document.getElementById("branchMapEdit");
+  if (editMapEl) {
+    const defaultLatLng = { lat: 0, lng: 0 }; // will update when editing
+    editBranchMap = new google.maps.Map(editMapEl, {
+      center: defaultLatLng,
+      zoom: 2,
+    });
+
+    editBranchMarker = new google.maps.Marker({
+      position: defaultLatLng,
+      map: editBranchMap,
+      draggable: true,
+    });
+
+    editBranchMarker.addListener("dragend", function () {
+      document.getElementById("branchLatitudeEdit").value =
+        editBranchMarker.getPosition().lat().toFixed(6);
+      document.getElementById("branchLongitudeEdit").value =
+        editBranchMarker.getPosition().lng().toFixed(6);
+    });
+
+    editBranchMap.addListener("click", function (e) {
+      editBranchMarker.setPosition(e.latLng);
+      document.getElementById("branchLatitudeEdit").value =
+        e.latLng.lat().toFixed(6);
+      document.getElementById("branchLongitudeEdit").value =
+        e.latLng.lng().toFixed(6);
+    });
+  }
+}
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArwI9jJAXm0u75YnXMTTq6v0CpVkqQRP0&callback=initBranchMaps"></script>
 
 <style>
   /* Dashboard Container */

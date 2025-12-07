@@ -30,6 +30,7 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
+from .utils import send_wa_message
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -935,6 +936,8 @@ def shop_page_data(request):
             page = 1
 
         product_list = current_page.object_list
+        total_products_count = Product.objects.count()  # total items in the model
+
 
         # Get categories for filter sidebar
         all_categories = Category.objects.annotate(
@@ -1037,7 +1040,7 @@ def shop_page_data(request):
                 }
             },
             'stats': {
-                'total_products': paginator.count,
+                'total_products': total_products_count,
                 'showing': len(products_data),
             }
         }
@@ -1080,7 +1083,20 @@ def get_shop_filters(request):
             'max': float(price_range['max_price'] or 1000),
         }
     })
-
+# utils/phone.py
+def format_libyan_number(number: str) -> str:
+    """
+    Normalize Libyan mobile numbers to international format +2189xxxxxxx
+    Example: 0912345678 -> +218912345678
+             912345678 -> +218912345678
+    """
+    number = number.strip()
+    if number.startswith("0"):
+        number = number[1:]
+    if not number.startswith("9"):
+        # assume user forgot leading 9
+        number = "9" + number
+    return f"+218{number}"
 
 from decimal import Decimal, InvalidOperation
 
@@ -1113,60 +1129,52 @@ def create_invoice(request):
     delivery_fee = city_obj.delivery_fee or Decimal("0.00")
 
     # 2) Build items + subtotal + discount
-    subtotal = Decimal("0.00")              # total after discount
-    total_discount_amount = Decimal("0.00") # total discount for the invoice
+    subtotal = Decimal("0.00")
+    total_discount_amount = Decimal("0.00")
     invoice_items = []
 
     try:
         for item in items:
             product_id = item["product_id"]
             quantity = int(item["quantity"])
-            # original unit price
             price = Decimal(str(item["price"]))
             item_name = (item.get("name") or "").strip()
-
-            # discount percentage (optional)
             raw_discount = item.get("discount_percentage", 0)
             discount_pct = Decimal(str(raw_discount or 0))
 
             if quantity <= 0:
                 return JsonResponse({"error": "Quantity must be positive"}, status=400)
-
             if discount_pct < 0 or discount_pct > 100:
                 return JsonResponse(
                     {"error": "Discount percentage must be between 0 and 100"},
                     status=400,
                 )
 
-            # discounted unit price
             discount_multiplier = (Decimal("100") - discount_pct) / Decimal("100")
             discounted_price = (price * discount_multiplier).quantize(Decimal("0.01"))
 
             line_total = discounted_price * quantity
             subtotal += line_total
-
-            # line discount amount = (original - discounted) * quantity
             line_discount_amount = (price - discounted_price) * quantity
             total_discount_amount += line_discount_amount
 
             invoice_items.append(
                 InvoiceItem(
-                    invoice=None,  # attach later
+                    invoice=None,
                     product_id=product_id,
                     name=item_name,
                     quantity=quantity,
-                    original_price=price,            # store original unit price
-                    price=discounted_price,          # store discounted unit price
-                    discount_percentage=discount_pct # snapshot of discount used
+                    original_price=price,
+                    price=discounted_price,
+                    discount_percentage=discount_pct
                 )
             )
     except (KeyError, ValueError, TypeError, InvalidOperation) as e:
         return JsonResponse({"error": f"Invalid item data: {e}"}, status=400)
 
-    # 3) Total = subtotal(after discount) + delivery fee
     total = subtotal + delivery_fee
 
-    # 4) Create Invoice
+    # 3) Create Invoice
     invoice = Invoice.objects.create(
         name=name,
         city=city_obj.name,
@@ -1174,24 +1182,53 @@ def create_invoice(request):
         phone=phone,
         delivery_fee=delivery_fee,
         total=total,
-        discount_amount=total_discount_amount,  # 👈 use the field on Invoice
+        discount_amount=total_discount_amount,
     )
 
-    # 5) Attach items
+    # 4) Attach items
     for inv_item in invoice_items:
         inv_item.invoice = invoice
     InvoiceItem.objects.bulk_create(invoice_items)
 
+    # 5) Prepare and send WhatsApp messages
+  # Prepare and send WhatsApp messages
+    client_number = format_libyan_number(phone)
+    employee_number = "+218942434823"  # single employee number
+
+    # Arabic messages
+    client_message = f"مرحبا {name or 'العميل'}!\nتم استلام طلبك بنجاح.\nرقم الفاتورة: {invoice.id}\nالإجمالي: {total} د.ل\nشكراً لتعاملكم معنا ❤️"
+
+    # Employee message with safe fallback for missing fields
+    employee_message = (
+        f"تنبيه: لديك طلب جديد جاهز للمعالجة.\n"
+        f"رقم الفاتورة: {invoice.id}\n"
+        f"العميل: {name or 'غير محدد'}\n"
+        f"العنوان: {address or 'غير محدد'}\n"
+        f"المدينة: {city_obj.name or 'غير محدد'}\n"
+        f"الهاتف: {client_number or 'غير محدد'}"
+    )
+
+    # Send messages via Wawp, but catch exceptions so it doesn't break invoice creation
+    try:
+        send_wa_message(client_number, client_message)
+    except Exception as e:
+        print(f"Failed to send message to client {client_number}: {e}")
+
+    try:
+        send_wa_message(employee_number, employee_message)
+    except Exception as e:
+        print(f"Failed to send message to employee {employee_number}: {e}")
+
+
     return JsonResponse({
         "success": True,
         "invoice_id": invoice.id,
-        "subtotal": str(subtotal),                  # after discount
+        "subtotal": str(subtotal),
         "delivery_fee": str(delivery_fee),
         "discount_amount": str(total_discount_amount),
         "total": str(total),
+        "client_number": client_number,
     })
-
-
 
 @require_http_methods(["GET", "POST"])
 def banner_detail_api(request, pk):
