@@ -1041,7 +1041,7 @@
       effectivePrice = basePrice * (1 - discountPct / 100);
     }
     const priceNum = basePrice;
-    const price = basePrice ? `$${effectivePrice.toFixed(2)}` : "Price on request";
+    const price = basePrice ? `${effectivePrice.toFixed(2)}` : "Price on request";
 
     const safeName = (product.name || "").replace(/'/g, "\\'");
     const category = product.category || "Uncategorized";
@@ -1118,7 +1118,7 @@
             <h3 class="product-title" style="font-size:1rem; font-weight:600; margin:5px 0; height:2.8em; overflow:hidden; line-height:1.4;">${product.name || ""}</h3>
           </a>
 
-          <div class="product-price" style="margin:8px 0;">
+<div class="product-price" style="margin:8px 0;">
   <span class="current-price" style="font-size:1.2rem;font-weight:700;">
     د.ل${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
   </span>

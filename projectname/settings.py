@@ -32,6 +32,8 @@ handler404 = 'main.views.t404_view'
 
 ALLOWED_HOSTS = [
     '102.213.181.243',
+    'awferlk.com.ly',
+    'www.awferlk.com.ly',
 ]
 
 
@@ -88,14 +90,31 @@ WSGI_APPLICATION = 'projectname.wsgi.application'
 
 AUTH_USER_MODEL = 'main.User'
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'mssql',
+        'NAME': 'awferlk_prod',
+        'USER': 'sa',
+        'PASSWORD': 'Akh!25_sitex_sql_2025#',
+        'HOST': '102.213.181.243',
+        'PORT': '1433',
+
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'Trusted_Connection':'yes',
+        },
+        'TEST': {
+            'NAME': 'awferlk_testing',  # Explicit test database name
+        },
+    },
 }
-
-
 
 
 
