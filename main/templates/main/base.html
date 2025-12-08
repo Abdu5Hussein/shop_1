@@ -346,13 +346,17 @@
       .form-select {
         border: 1px solid var(--card-border-color);
         background-color: var(--card-bg);
+        color: var(--text-color);
       }
 
       .text-muted {
-        color: var(--secondary) !important;
+        color: var(--text-color) !important;
       }
       .form-text {
-        color: var(--secondary) !important;
+        color: var(--text-color) !important;
+      }
+      .form-label {
+        color: var(--text-color) !important;
       }
 
       /* Footer */
@@ -964,6 +968,16 @@
         margin: 0 auto 15px auto;
         display: none;
       }
+      .modal-body {
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) var(--card-bg);
+        background-color: var(--card-bg);
+        color: var(--text-color);
+      }
+
+
+
+      
 
       /* ===== RESPONSIVE STYLES ===== */
       @media (max-width: 768px) {
@@ -1589,7 +1603,21 @@
 <style>
   /* Modal header gradient */
   .bg-gradient-primary {
-    background: linear-gradient(135deg, #6f42c1, #6610f2);
+    background: var(--primary)
+
+  }
+  .modal-footer {
+    background-color: var(--card-bg);
+  }
+  .btn-primary{
+         
+  background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-dark)
+  );
+  color: white;
+
   }
 
   /* Form input focus */
@@ -1608,8 +1636,7 @@
 
   /* Button hover effects */
   .btn-primary {
-    background-color: #6610f2;
-    border-color: #6610f2;
+
     transition: all 0.3s ease;
   }
   .btn-primary:hover {

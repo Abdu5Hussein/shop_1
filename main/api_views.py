@@ -889,17 +889,12 @@ def shop_page_data(request):
             products = products.filter(category__slug=category_slug)
 
         if search_query:
-            products = products.annotate(
-                similarity_name=TrigramSimilarity('name', search_query),
-                similarity_description=TrigramSimilarity('description', search_query),
-                similarity_category=TrigramSimilarity('category__name', search_query),
-            ).filter(
-                Q(similarity_name__gt=0.2) |
-                Q(similarity_description__gt=0.2) |
-                Q(similarity_category__gt=0.2)
-            ).order_by(
-                '-similarity_name', '-similarity_description', '-similarity_category'
+            products = products.filter(
+                Q(name__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(category__name__icontains=search_query)
             )
+
 
         if min_price is not None:
             products = products.filter(price__gte=min_price)

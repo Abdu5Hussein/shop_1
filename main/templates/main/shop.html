@@ -1007,9 +1007,9 @@
 
 {% block content %}
 <!-- Loading Overlay -->
-<div class="loading-overlay" id="loadingOverlay">
+<!-- <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner"></div>
-</div>
+</div> -->
 
 <!-- Flutter-style Shop Container -->
 <div class="shop-container">
@@ -1769,28 +1769,19 @@ function applyFiltersFromModal() {
 // Clear all filters
 // ==============================
 function clearFilters() {
-  shopState.filters = {
+  // Reload /shop with default query params
+  const defaultParams = new URLSearchParams({
     category: "all",
-    minPrice: shopState.priceRange.min,
-    maxPrice: shopState.priceRange.max,
-    inStock: false,
-    sortBy: "newest",
-    search: "",
-  };
+    min_price: 0,
+    max_price: 1000,
+    in_stock: "false",
+    sort_by: "newest",
+    search: ""
+  });
 
-  shopState.pagination.currentPage = 1;
-
-  // Reset UI checkboxes
-  const mobileCheckbox = document.getElementById('mobileInStockCheckbox');
-  const desktopCheckbox = document.getElementById('desktopInStockCheckbox');
-  if (mobileCheckbox) mobileCheckbox.checked = false;
-  if (desktopCheckbox) desktopCheckbox.checked = false;
-
-  // Reset price sliders
-  updatePriceSliders();
-
-  applyFilters();
+  window.location.href = `/shop?${defaultParams.toString()}`;
 }
+
 
 // ==============================
 // Clear filter modal (mobile only)
@@ -1918,7 +1909,6 @@ function goToPage(page) {
 // Load shop data
 // ==============================
 async function loadShopData() {
-  showLoading(true);
 
   try {
     const urlParams = new URLSearchParams(window.location.search);

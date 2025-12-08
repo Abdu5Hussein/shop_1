@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@v&qxtrk1@372)1wolmf_85_8(04t*azx!9v%+7wpydywlp)d5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 handler404 = 'main.views.t404_view'
 
 
@@ -156,6 +156,17 @@ LOCALE_PATHS = [
     BASE_DIR / "locale",
 ]
 
+# -------------------------------
+# CSRF settings
+# -------------------------------
+CSRF_TRUSTED_ORIGINS = [
+    "https://awferlk.com.ly",
+    "https://www.awferlk.com.ly",
+]
+
+# Optional: if you use session cookies on HTTPS
+CSRF_COOKIE_SECURE = True  # ensure CSRF cookie is sent only over HTTPS
+SESSION_COOKIE_SECURE = True  # same for session cookie
 
 
 # Static files (CSS, JavaScript, Images)

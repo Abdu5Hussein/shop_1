@@ -999,36 +999,51 @@
     }*/
 
   // Render product grid (Featured & New Arrivals)
-  function renderProductGrid(container, products) {
+function renderProductGrid(container, products) {
   if (!container) return;
 
   let html = "";
+  const w = window.innerWidth;
 
-  // Determine responsive sizes
+  // Responsive settings
   let gridGap = "30px";
   let cardHeight = "320px";
-  let productMinWidth = "280px";
+  let columns = 4;
+  let fontSizeCategory = "0.8rem";
+  let fontSizeTitle = "1rem";
+  let fontSizePrice = "1.2rem";
+  let fontSizeDiscount = "0.8rem";
+  let btnSize = "36px";
+  let btnFontSize = "1.2rem";
+  let cardPadding = "15px";
 
-  const w = window.innerWidth;
-  if (w <= 480) { // mobile
-    gridGap = "10px";
-    cardHeight = "170px";
-    productMinWidth = "50%";
-  } else if (w <= 768) { // tablet
-    gridGap = "15px";
+  if (w <= 480) { // Mobile
+    gridGap = "0px";           // remove gaps
+    columns = 2;
+    cardHeight = "auto";
+    fontSizeCategory = "0.7rem";
+    fontSizeTitle = "0.9rem";
+    fontSizePrice = "1rem";
+    fontSizeDiscount = "0.7rem";
+    btnSize = "28px";
+    btnFontSize = "1rem";
+    cardPadding = "10px";    // reduce padding inside cards
+    container.style.padding = "0"; // remove grid container padding
+  } else if (w <= 768) { // Tablet
+    gridGap = "0px";
+    columns = 3;
     cardHeight = "200px";
-    productMinWidth = "170px";
-  } else if (w <= 1024) { // small desktop
+  } else if (w <= 1024) { // Small desktop
     gridGap = "20px";
+    columns = 3;
     cardHeight = "280px";
-    productMinWidth = "240px";
   }
 
-  // Set container grid styles inline
   container.style.display = "grid";
-  container.style.gridTemplateColumns = `repeat(auto-fill, minmax(${productMinWidth}, 1fr))`;
+  container.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
   container.style.gap = gridGap;
   container.style.margin = "40px 0";
+  container.style.padding = "0"; // default no padding
 
   products.forEach((product) => {
     const inStock = product.in_stock;
@@ -1052,36 +1067,30 @@
 
     let actionHtml = "";
     if (qtyInCart > 0) {
-  actionHtml = `
-    <div class="cart-qty-control" data-product-id="${product.id}"
-         style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:10px;width:100%;">
-      <button class="qty-btn minus"
-              style="background:#ff6b6b;color:white;border:none;border-radius:50%;width:36px;height:36px;font-weight:bold;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;"
-              onclick="event.stopPropagation(); changeCartQuantity(${product.id}, -1)">-</button>
+      actionHtml = `
+        <div class="cart-qty-control" data-product-id="${product.id}" style="display:flex;justify-content:center;align-items:center;gap:8px;margin-top:8px;width:100%;">
+          <button class="qty-btn minus" style="background:#ff6b6b;color:white;border:none;border-radius:50%;width:${btnSize};height:${btnSize};font-weight:bold;font-size:${btnFontSize};cursor:pointer;display:flex;align-items:center;justify-content:center;"
+                  onclick="event.stopPropagation(); changeCartQuantity(${product.id}, -1)">-</button>
 
-      <span class="qty-number"
-            style="min-width:28px;text-align:center;font-size:1.1rem;font-weight:600;color:#333;">
-        ${qtyInCart}
-      </span>
+          <span class="qty-number" style="min-width:20px;text-align:center;font-size:${btnFontSize};font-weight:600;color:#333;">
+            ${qtyInCart}
+          </span>
 
-      <button class="qty-btn plus"
-              style="background:#4caf50;color:white;border:none;border-radius:50%;width:36px;height:36px;font-weight:bold;font-size:1.2rem;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;"
-              onclick="event.stopPropagation(); changeCartQuantity(${product.id}, 1)">+</button>
-    </div>
-  `;
-}
- else {
-  const canOrderText = "{% trans 'Add to Cart' %}";
-  const cannotOrderText = "{% trans 'Cannot Order' %}";
-
-  actionHtml = `
-    <button class="add-to-cart-btn"
-            style="display:block;margin:15px auto;padding:12px 24px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border:none;border-radius:25px;font-weight:bold;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.2);width:100%;"
-            onclick="event.stopPropagation(); handleAddToCartFromCard(this, ${product.id}, '${safeName}', ${priceNum}, '${image}', ${canOrder ? "true" : "false"}, ${discountPct})"
-            ${!canOrder ? "disabled" : ""}>
-      <i class="fas fa-cart-plus me-2"></i>${canOrder ? canOrderText : cannotOrderText}
-    </button>
-  `;
+          <button class="qty-btn plus" style="background:#4caf50;color:white;border:none;border-radius:50%;width:${btnSize};height:${btnSize};font-weight:bold;font-size:${btnFontSize};cursor:pointer;display:flex;align-items:center;justify-content:center;"
+                  onclick="event.stopPropagation(); changeCartQuantity(${product.id}, 1)">+</button>
+        </div>
+      `;
+    } else {
+      const canOrderText = "Add to Cart";
+      const cannotOrderText = "Cannot Order";
+      actionHtml = `
+        <button class="add-to-cart-btn"
+                style="display:block;margin:10px auto;padding:8px 16px;background:linear-gradient(135deg,#6a11cb,#2575fc);color:white;border:none;border-radius:20px;font-weight:bold;cursor:pointer;width:100%;font-size:${btnFontSize};"
+                onclick="event.stopPropagation(); handleAddToCartFromCard(this, ${product.id}, '${safeName}', ${priceNum}, '${image}', ${canOrder ? "true" : "false"}, ${discountPct})"
+                ${!canOrder ? "disabled" : ""}>
+          ${canOrder ? canOrderText : cannotOrderText}
+        </button>
+      `;
     }
 
     html += `
@@ -1095,48 +1104,46 @@
            style="border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:transform 0.2s;display:flex;flex-direction:column;background:white;">
 
         <a href="/product/${product.id}/" class="product-image-container"
-           style="position:relative;overflow:hidden;display:block;text-decoration:none;height:${cardHeight};">
-          <img src="${image}"
-               alt="${product.name || ""}"
-               class="product-image"
-               style="
-                  width: 100%;
-                  height: 100%;
-                  object-fit: contain;
-                  object-position: center;
-                  background-color: #f5f5f5;
-                  transition: transform 0.3s;
-               ">
+ style="
+      position: relative;
+      overflow: hidden;
+      display: block;
+      text-decoration: none;
+      width: 100%;           /* fill the card width */
+      height: 200px;         /* fixed height for all products */
+      min-height: 200px;     /* ensures same height across cards */
+      max-height: 200px;     /* prevents bigger images */
+   ">          <img src="${image}" alt="${product.name || ""}" class="product-image"
+               style="width:100%;height:100%;object-fit:contain;object-position:center;background-color:#f5f5f5;transition: transform 0.3s;">
           <div class="product-badges" style="position:absolute;top:10px;left:10px;display:flex;gap:5px;">
             ${inStock ? '<span style="background:#28a745;color:white;padding:3px 7px;border-radius:5px;font-size:0.7rem;">New</span>' : ""}
           </div>
         </a>
 
-        <div class="product-info" style="padding:15px;flex:1;display:flex;flex-direction:column;">
+        <div class="product-info" style="padding:${cardPadding};flex:1;display:flex;flex-direction:column;">
           <a href="/product/${product.id}/" style="text-decoration:none;">
-            <div class="product-category" style="font-size:0.8rem; margin-bottom:5px;">${category}</div>
-            <h3 class="product-title" style="font-size:1rem; font-weight:600; margin:5px 0; height:2.8em; overflow:hidden; line-height:1.4;">${product.name || ""}</h3>
+            <div class="product-category" style="font-size:${fontSizeCategory}; margin-bottom:5px;">${category}</div>
+            <h3 class="product-title" style="font-size:${fontSizeTitle}; font-weight:600; margin:5px 0; height:1.8em; overflow:hidden; line-height:1.4;">${product.name || ""}</h3>
           </a>
 
-<div class="product-price" style="margin:8px 0;">
-  <span class="current-price" style="font-size:1.2rem;font-weight:700;">
+          <div class="product-price" style="margin:6px 0; display:flex; flex-wrap:wrap; align-items:center;">
+  <span class="current-price" style="font-size:${fontSizePrice}; font-weight:700; white-space:nowrap;">
     د.ل${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
   </span>
   ${
     discountPct > 0 && basePrice
-      ? `
-        <span style="text-decoration: line-through; color: #aaa; margin-left: 8px; font-size: 0.9rem;">
-          د.ل${basePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </span>
-        <span style="margin-left: 6px; font-size: 0.8rem; color: #ff5252; font-weight: bold;">
-          -${discountPct}%
-        </span>
-      `
+      ? `<span style="text-decoration: line-through; color: #aaa; margin-left: 6px; font-size:${fontSizeDiscount}; white-space:nowrap;">
+           د.ل${basePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+         </span>
+         <span style="margin-left: 4px; font-size:${fontSizeDiscount}; color: #ff5252; font-weight: bold; white-space:nowrap;">
+           -${discountPct}%
+         </span>`
       : ""
   }
 </div>
 
-          <div class="product-actions-row" style="margin-top:auto;pt-15">
+
+          <div class="product-actions-row" style="margin-top:auto;">
             ${actionHtml}
           </div>
         </div>
@@ -1146,6 +1153,7 @@
 
   container.innerHTML = html;
 }
+
 
 // Optionally, re-render on window resize
 window.addEventListener("resize", () => {
