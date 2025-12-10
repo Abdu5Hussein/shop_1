@@ -11,9 +11,16 @@
     <title>
       {% block title %}{% trans "AWFERLK Solutions" %}{% endblock %}
     </title>
-    <link rel="icon" sizes="32x32" href="{% static 'main/img/awferlek-logo-no-bg.png' %}">
-    <link rel="icon" sizes="16x16" href="{% static 'main/img/awferlek-logo-no-bg.png' %}">
-
+    <link
+      rel="icon"
+      sizes="32x32"
+      href="{% static 'main/img/awferlek-logo-no-bg.png' %}"
+    />
+    <link
+      rel="icon"
+      sizes="16x16"
+      href="{% static 'main/img/awferlek-logo-no-bg.png' %}"
+    />
 
     <!-- Bootstrap 5 CSS -->
     <link
@@ -26,8 +33,10 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+    />
 
     <!-- Font Awesome -->
     <link
@@ -124,6 +133,10 @@
         padding-bottom: 70px; /* Space for bottom navbar on mobile */
       }
 
+      button {
+        border-radius: 10px !important;
+      }
+
       /* LTR / RTL helpers */
       body.ltr {
         direction: ltr;
@@ -158,6 +171,10 @@
         padding: 0.5rem 1rem !important;
         border-radius: 8px;
         transition: all 0.3s ease;
+      }
+
+      .bg-primary-var {
+        background-color: var(--primary) !important;
       }
 
       .nav-link:hover {
@@ -975,10 +992,6 @@
         color: var(--text-color);
       }
 
-
-
-      
-
       /* ===== RESPONSIVE STYLES ===== */
       @media (max-width: 768px) {
         body {
@@ -1119,7 +1132,9 @@
     class="{% if request.LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}"
   >
     <!-- Desktop Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-transparent d-none d-lg-block">
+    <nav
+      class="navbar navbar-expand-lg navbar-light bg-transparent d-none d-lg-block"
+    >
       <div class="container">
         <a
           class="navbar-brand d-flex align-items-center"
@@ -1252,29 +1267,51 @@
     <!-- Mobile Bottom Navigation -->
     <nav class="bottom-navbar d-lg-none">
       <div class="bottom-navbar-items">
-        <a href="{% url 'home' %}" class="bottom-nav-item {% if request.path == '/' %}active{% endif %}">
+        <a
+          href="{% url 'home' %}"
+          class="bottom-nav-item {% if request.path == '/' %}active{% endif %}"
+        >
           <i class="fas fa-home bottom-nav-icon"></i>
           <span class="bottom-nav-text">{% trans "Home" %}</span>
         </a>
 
-        <a href="{% url 'shop' %}" class="bottom-nav-item {% if 'shop' in request.path %}active{% endif %}">
+        <a
+          href="{% url 'shop' %}"
+          class="bottom-nav-item {% if 'shop' in request.path %}active{% endif %}"
+        >
           <i class="fas fa-store bottom-nav-icon"></i>
           <span class="bottom-nav-text">{% trans "Shop" %}</span>
         </a>
 
-        <a href="#" class="bottom-nav-item" id="mobileCartNav" onclick="showCart(); return false;">
+        <a
+          href="#"
+          class="bottom-nav-item"
+          id="mobileCartNav"
+          onclick="showCart(); return false;"
+        >
           <i class="fas fa-shopping-cart bottom-nav-icon"></i>
           <span class="bottom-nav-text">{% trans "Cart" %}</span>
-          <span class="cart-badge-bottom" id="bottomCartBadge" style="display: none">0</span>
+          <span
+            class="cart-badge-bottom"
+            id="bottomCartBadge"
+            style="display: none"
+            >0</span
+          >
         </a>
 
         {% if user.is_authenticated %}
-        <a href="{% url 'dashboard' %}" class="bottom-nav-item {% if 'dashboard' in request.path %}active{% endif %}">
+        <a
+          href="{% url 'dashboard' %}"
+          class="bottom-nav-item {% if 'dashboard' in request.path %}active{% endif %}"
+        >
           <i class="fas fa-user-circle bottom-nav-icon"></i>
           <span class="bottom-nav-text">{% trans "Account" %}</span>
         </a>
         {% else %}
-        <a href="{% url 'login' %}" class="bottom-nav-item {% if 'login' in request.path %}active{% endif %}">
+        <a
+          href="{% url 'login' %}"
+          class="bottom-nav-item {% if 'login' in request.path %}active{% endif %}"
+        >
           <i class="fas fa-sign-in-alt bottom-nav-icon"></i>
           <span class="bottom-nav-text">{% trans "Login" %}</span>
         </a>
@@ -1290,30 +1327,53 @@
     <!-- More Menu Modal for Mobile -->
     <div class="modal fade" id="moreMenuModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-bottom">
-        <div class="modal-content modern-modal" style="border-radius: 20px 20px 0 0;">
+        <div
+          class="modal-content modern-modal"
+          style="border-radius: 20px 20px 0 0"
+        >
           <div class="modal-header">
             <h5 class="modal-title">{% trans "More Options" %}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
           <div class="modal-body p-0">
             <div class="list-group list-group-flush">
-              <a href="{% url 'about' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <a
+                href="{% url 'about' %}"
+                class="list-group-item list-group-item-action d-flex align-items-center"
+              >
                 <i class="fas fa-info-circle me-3 text-primary"></i>
                 <span>{% trans "About Us" %}</span>
               </a>
-              <a href="{% url 'contact' %}" class="list-group-item list-group-item-action d-flex align-items-center">
+              <a
+                href="{% url 'contact' %}"
+                class="list-group-item list-group-item-action d-flex align-items-center"
+              >
                 <i class="fas fa-envelope me-3 text-primary"></i>
                 <span>{% trans "Contact Us" %}</span>
               </a>
               {% if user.is_authenticated %}
-              <a href="{% url 'logout' %}" class="list-group-item list-group-item-action d-flex align-items-center text-danger">
+              <a
+                href="{% url 'logout' %}"
+                class="list-group-item list-group-item-action d-flex align-items-center text-danger"
+              >
                 <i class="fas fa-sign-out-alt me-3"></i>
                 <span>{% trans "Logout" %}</span>
               </a>
               {% endif %}
-              <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div
+                class="list-group-item d-flex justify-content-between align-items-center"
+              >
                 <span>{% trans "Theme" %}</span>
-                <button type="button" id="mobileThemeToggle" class="btn btn-outline-secondary btn-sm">
+                <button
+                  type="button"
+                  id="mobileThemeToggle"
+                  class="btn btn-outline-secondary btn-sm"
+                >
                   <i class="fa-solid fa-moon"></i>
                 </button>
               </div>
@@ -1321,19 +1381,43 @@
                 <div class="d-flex justify-content-between align-items-center">
                   <span>{% trans "Language" %}</span>
                   <div>
-                    <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                    <form
+                      action="{% url 'set_language' %}"
+                      method="post"
+                      class="d-inline"
+                    >
                       {% csrf_token %}
-                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                      <button type="submit" name="language" value="ar"
-                        class="btn btn-outline-secondary btn-sm {% if request.LANGUAGE_CODE == 'ar' %}active{% endif %}">
+                      <input
+                        type="hidden"
+                        name="next"
+                        value="{{ request.get_full_path }}"
+                      />
+                      <button
+                        type="submit"
+                        name="language"
+                        value="ar"
+                        class="btn btn-outline-secondary btn-sm {% if request.LANGUAGE_CODE == 'ar' %}active{% endif %}"
+                      >
                         عربي
                       </button>
                     </form>
-                    <form action="{% url 'set_language' %}" method="post" class="d-inline">
+                    <form
+                      action="{% url 'set_language' %}"
+                      method="post"
+                      class="d-inline"
+                    >
                       {% csrf_token %}
-                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                      <button type="submit" name="language" value="en"
-                        class="btn btn-outline-secondary btn-sm {% if request.LANGUAGE_CODE == 'en' %}active{% endif %}">
+                      <input
+                        type="hidden"
+                        name="next"
+                        value="{{ request.get_full_path }}"
+                      />
+                      <button
+                        type="submit"
+                        name="language"
+                        value="en"
+                        class="btn btn-outline-secondary btn-sm {% if request.LANGUAGE_CODE == 'en' %}active{% endif %}"
+                      >
                         EN
                       </button>
                     </form>
@@ -1548,114 +1632,169 @@
       </div>
     </div>
 
-   <!-- Checkout Modal -->
-<div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down">
-    <div class="modal-content shadow-lg rounded-4 border-0">
-      <div class="modal-header bg-gradient-primary text-white py-3 rounded-top-4">
-        <h5 class="modal-title">
-          <i class="fas fa-shopping-cart me-2"></i> {% trans "Checkout" %}
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body p-4">
-        <form id="checkoutForm" class="row g-3">
-          <!-- Name -->
-          <div class="col-12">
-            <label for="customerName" class="form-label">{% trans "Your Name" %}</label>
-            <input type="text" class="form-control form-control-lg" id="customerName" required>
+    <!-- Checkout Modal -->
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-hidden="true">
+      <div
+        class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-sm-down"
+      >
+        <div class="modal-content shadow-lg rounded-4 border-0">
+          <div
+            class="modal-header bg-gradient-primary text-white py-3 rounded-top-4"
+          >
+            <h5 class="modal-title">
+              <i class="fas fa-shopping-cart me-2"></i> {% trans "Checkout" %}
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
           </div>
+          <div class="modal-body p-4">
+            <form id="checkoutForm" class="row g-3">
+              <!-- Name -->
+              <div class="col-12">
+                <label for="customerName" class="form-label"
+                  >{% trans "Your Name" %}</label
+                >
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="customerName"
+                  required
+                />
+              </div>
 
-          <!-- City -->
-          <div class="col-12 col-md-6">
-            <label for="shippingCity" class="form-label">{% trans "City" %}</label>
-            <select class="form-select form-select-lg" id="shippingCity" required>
-              <option value="">{% trans "Select City" %}</option>
-            </select>
-            <div id="cityDeliveryInfo" class="form-text mt-1 text-muted" style="display: none;">
-              {% trans "Delivery fee:" %} <span id="cityDeliveryFee"></span>
-            </div>
-          </div>
+              <!-- City -->
+              <div class="col-12 col-md-6">
+                <label for="shippingCity" class="form-label"
+                  >{% trans "City" %}</label
+                >
+                <select
+                  class="form-select form-select-lg"
+                  id="shippingCity"
+                  required
+                >
+                  <option value="">{% trans "Select City" %}</option>
+                </select>
+                <div
+                  id="cityDeliveryInfo"
+                  class="form-text mt-1 text-muted"
+                  style="display: none"
+                >
+                  {% trans "Delivery fee:" %} <span id="cityDeliveryFee"></span>
+                </div>
+              </div>
 
-          <!-- Phone -->
-          <div class="col-12 col-md-6">
-            <label for="shippingPhone" class="form-label">{% trans "Phone Number" %}</label>
-            <input type="tel" class="form-control form-control-lg" id="shippingPhone" required pattern="[0-9]{6,15}">
-          </div>
+              <!-- Phone -->
+              <div class="col-12 col-md-6">
+                <label for="shippingPhone" class="form-label"
+                  >{% trans "Phone Number" %}</label
+                >
+                <input
+                  type="tel"
+                  class="form-control form-control-lg"
+                  id="shippingPhone"
+                  required
+                  pattern="[0-9]{6,15}"
+                />
+              </div>
 
-          <!-- Address -->
-          <div class="col-12">
-            <label for="shippingAddress" class="form-label">{% trans "Address" %}</label>
-            <input type="text" class="form-control form-control-lg" id="shippingAddress" required>
+              <!-- Address -->
+              <div class="col-12">
+                <label for="shippingAddress" class="form-label"
+                  >{% trans "Address" %}</label
+                >
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  id="shippingAddress"
+                  required
+                />
+              </div>
+            </form>
+            <div
+              id="checkoutError"
+              class="text-danger small mt-2"
+              style="display: none"
+            ></div>
           </div>
-        </form>
-        <div id="checkoutError" class="text-danger small mt-2" style="display: none"></div>
-      </div>
-      <div class="modal-footer border-0 pt-0 pb-4 d-flex justify-content-between flex-wrap">
-        <button type="button" class="btn btn-outline-secondary btn-lg mb-2" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
-        <button type="button" class="btn btn-primary btn-lg mb-2" id="submitCheckout">{% trans "Place Order" %}</button>
+          <div
+            class="modal-footer border-0 pt-0 pb-4 d-flex justify-content-between flex-wrap"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-lg mb-2"
+              data-bs-dismiss="modal"
+            >
+              {% trans "Cancel" %}
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary btn-lg mb-2"
+              id="submitCheckout"
+            >
+              {% trans "Place Order" %}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
-<!-- Custom CSS -->
-<style>
-  /* Modal header gradient */
-  .bg-gradient-primary {
-    background: var(--primary)
+    <!-- Custom CSS -->
+    <style>
+      /* Modal header gradient */
+      .bg-gradient-primary {
+        background: var(--primary);
+      }
+      .modal-footer {
+        background-color: var(--card-bg);
+      }
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--primary),
+          var(--primary-dark)
+        );
+        color: white;
+      }
 
-  }
-  .modal-footer {
-    background-color: var(--card-bg);
-  }
-  .btn-primary{
-         
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    var(--primary-dark)
-  );
-  color: white;
+      /* Form input focus */
+      .form-control:focus {
+        border-color: #6610f2;
+        box-shadow: 0 0 0 0.25rem rgba(102, 16, 242, 0.25);
+      }
 
-  }
+      /* Modal for mobile fullscreen */
+      @media (max-width: 576px) {
+        #checkoutModal .modal-content {
+          border-radius: 0;
+          height: 100%;
+        }
+      }
 
-  /* Form input focus */
-  .form-control:focus {
-    border-color: #6610f2;
-    box-shadow: 0 0 0 0.25rem rgba(102,16,242,0.25);
-  }
+      /* Button hover effects */
+      .btn-primary {
+        transition: all 0.3s ease;
+      }
+      .btn-primary:hover {
+        background-color: #5a0dcf;
+        border-color: #5a0dcf;
+      }
+      .btn-outline-secondary:hover {
+        background-color: #f8f9fa;
+      }
 
-  /* Modal for mobile fullscreen */
-  @media (max-width: 576px) {
-    #checkoutModal .modal-content {
-      border-radius: 0;
-      height: 100%;
-    }
-  }
-
-  /* Button hover effects */
-  .btn-primary {
-
-    transition: all 0.3s ease;
-  }
-  .btn-primary:hover {
-    background-color: #5a0dcf;
-    border-color: #5a0dcf;
-  }
-  .btn-outline-secondary:hover {
-    background-color: #f8f9fa;
-  }
-
-  /* Rounded modal corners */
-  .rounded-4 {
-    border-radius: 1rem !important;
-  }
-  .rounded-top-4 {
-    border-top-left-radius: 1rem !important;
-    border-top-right-radius: 1rem !important;
-  }
-</style>
+      /* Rounded modal corners */
+      .rounded-4 {
+        border-radius: 1rem !important;
+      }
+      .rounded-top-4 {
+        border-top-left-radius: 1rem !important;
+        border-top-right-radius: 1rem !important;
+      }
+    </style>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -1789,12 +1928,18 @@
             <div class="cart-item-info">
               <div class="cart-item-name">${item.name}</div>
               <div class="cart-item-price">
-  د.ل${effectivePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+  د.ل${effectivePrice.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}
   ${
     discountPct > 0 && basePrice
       ? `
         <span style="text-decoration: line-through; color: #aaa; font-size: 0.85rem; margin-left: 6px;">
-          د.ل${basePrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          د.ل${basePrice.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}
         </span>
         <span class="badge bg-danger ms-2">-${discountPct}%</span>
       `
@@ -2048,7 +2193,9 @@
       }
 
       function toggleMoreMenu() {
-        const modal = new bootstrap.Modal(document.getElementById('moreMenuModal'));
+        const modal = new bootstrap.Modal(
+          document.getElementById("moreMenuModal")
+        );
         modal.show();
       }
 
@@ -2163,125 +2310,135 @@
         const submitBtn = document.getElementById("submitCheckout");
         const errorDiv = document.getElementById("checkoutError");
 
-submitBtn.onclick = async function () {
-    const nameInput = document.getElementById("customerName");
-    const citySelect = document.getElementById("shippingCity");
-    const addressInput = document.getElementById("shippingAddress");
-    const phoneInput = document.getElementById("shippingPhone");
+        submitBtn.onclick = async function () {
+          const nameInput = document.getElementById("customerName");
+          const citySelect = document.getElementById("shippingCity");
+          const addressInput = document.getElementById("shippingAddress");
+          const phoneInput = document.getElementById("shippingPhone");
 
-    const name = (nameInput?.value || "").trim();
-    const cityId = citySelect ? citySelect.value : "";
-    const cityName =
-      citySelect && citySelect.selectedOptions.length
-        ? citySelect.selectedOptions[0].text
-        : "";
-    const address = (addressInput?.value || "").trim();
-    const phone = (phoneInput?.value || "").trim();
+          const name = (nameInput?.value || "").trim();
+          const cityId = citySelect ? citySelect.value : "";
+          const cityName =
+            citySelect && citySelect.selectedOptions.length
+              ? citySelect.selectedOptions[0].text
+              : "";
+          const address = (addressInput?.value || "").trim();
+          const phone = (phoneInput?.value || "").trim();
 
-    if (!name || !cityId || !address || !phone || !/^\d{6,15}$/.test(phone)) {
-        if (errorDiv) {
-            errorDiv.textContent =
+          if (
+            !name ||
+            !cityId ||
+            !address ||
+            !phone ||
+            !/^\d{6,15}$/.test(phone)
+          ) {
+            if (errorDiv) {
+              errorDiv.textContent =
                 "{% trans 'Please enter a valid name, city, address, and phone number.' %}";
-            errorDiv.style.display = "block";
-        }
-        return;
-    }
-    if (errorDiv) errorDiv.style.display = "none";
-
-    // --- Show loading ---
-    Swal.fire({
-        title: "{% trans 'Processing your order...' %}",
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading();
-        },
-    });
-
-    try {
-        let subtotal = 0;
-        cart.forEach((item) => {
-            const basePrice = Number(item.price) || 0;
-            const qty = Number(item.quantity) || 0;
-            const discountPct = Number(item.discount_percentage) || 0;
-            let effectivePrice = basePrice;
-            if (discountPct > 0 && discountPct <= 100) {
-                effectivePrice = basePrice * (1 - discountPct / 100);
+              errorDiv.style.display = "block";
             }
-            subtotal += effectivePrice * qty;
-        });
+            return;
+          }
+          if (errorDiv) errorDiv.style.display = "none";
 
-        let deliveryFee = 0;
-        if (citySelect && citySelect.selectedOptions.length > 0) {
-            const feeStr = citySelect.selectedOptions[0].dataset.fee || "0";
-            const parsedFee = parseFloat(feeStr);
-            if (!isNaN(parsedFee)) deliveryFee = parsedFee;
-        }
+          // --- Show loading ---
+          Swal.fire({
+            title: "{% trans 'Processing your order...' %}",
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            },
+          });
 
-        const total = subtotal + deliveryFee;
+          try {
+            let subtotal = 0;
+            cart.forEach((item) => {
+              const basePrice = Number(item.price) || 0;
+              const qty = Number(item.quantity) || 0;
+              const discountPct = Number(item.discount_percentage) || 0;
+              let effectivePrice = basePrice;
+              if (discountPct > 0 && discountPct <= 100) {
+                effectivePrice = basePrice * (1 - discountPct / 100);
+              }
+              subtotal += effectivePrice * qty;
+            });
 
-        const payload = {
-            name,
-            city_id: cityId,
-            city_name: cityName,
-            address,
-            phone,
-            subtotal,
-            delivery_fee: deliveryFee,
-            total,
-            items: cart.map((item) => ({
+            let deliveryFee = 0;
+            if (citySelect && citySelect.selectedOptions.length > 0) {
+              const feeStr = citySelect.selectedOptions[0].dataset.fee || "0";
+              const parsedFee = parseFloat(feeStr);
+              if (!isNaN(parsedFee)) deliveryFee = parsedFee;
+            }
+
+            const total = subtotal + deliveryFee;
+
+            const payload = {
+              name,
+              city_id: cityId,
+              city_name: cityName,
+              address,
+              phone,
+              subtotal,
+              delivery_fee: deliveryFee,
+              total,
+              items: cart.map((item) => ({
                 product_id: item.id,
                 name: item.name,
                 quantity: item.quantity,
                 price: item.price,
                 discount_percentage: item.discount_percentage || 0,
-            })),
-        };
+              })),
+            };
 
-        const res = await fetch("/api/invoice/create/", {
-            method: "POST",
-            headers: {
+            const res = await fetch("/api/invoice/create/", {
+              method: "POST",
+              headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": getCookie("csrftoken"),
-            },
-            body: JSON.stringify(payload),
-        });
+              },
+              body: JSON.stringify(payload),
+            });
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "{% trans 'Failed to place order' %}");
+            const data = await res.json();
+            if (!res.ok)
+              throw new Error(
+                data.error || "{% trans 'Failed to place order' %}"
+              );
 
-        Swal.close(); // hide loading
+            Swal.close(); // hide loading
 
-        showNotification("{% trans 'Order placed successfully!' %}", "success");
+            showNotification(
+              "{% trans 'Order placed successfully!' %}",
+              "success"
+            );
 
-Swal.fire({
-    icon: "success",
-    title: "{% trans 'Order Received' %}",
-    text: "{% trans 'Thank you! Our team will contact you soon regarding your order.' %}",
-    confirmButtonText: "{% trans 'OK' %}",
-}).then((result) => {
-    if (result.isConfirmed) {
-        // Reload the page after OK is pressed
-        window.location.reload();
-    }
-});
+            Swal.fire({
+              icon: "success",
+              title: "{% trans 'Order Received' %}",
+              text: "{% trans 'Thank you! Our team will contact you soon regarding your order.' %}",
+              confirmButtonText: "{% trans 'OK' %}",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                // Reload the page after OK is pressed
+                window.location.reload();
+              }
+            });
 
+            cart = [];
+            saveCart();
+            updateCartModal();
+            updateCartUI();
 
-        cart = [];
-        saveCart();
-        updateCartModal();
-        updateCartUI();
-
-        const instance = bootstrap.Modal.getInstance(checkoutModalEl);
-        if (instance) instance.hide();
-    } catch (err) {
-        Swal.close(); // hide loading
-        if (errorDiv) {
-            errorDiv.textContent = err.message;
-            errorDiv.style.display = "block";
-        }
-    }
-};
-
+            const instance = bootstrap.Modal.getInstance(checkoutModalEl);
+            if (instance) instance.hide();
+          } catch (err) {
+            Swal.close(); // hide loading
+            if (errorDiv) {
+              errorDiv.textContent = err.message;
+              errorDiv.style.display = "block";
+            }
+          }
+        };
       }
 
       function getCookie(name) {
@@ -2320,7 +2477,10 @@ Swal.fire({
           htmlEl.setAttribute("data-theme", theme);
           localStorage.setItem(STORAGE_KEY, theme);
 
-          const icon = theme === "dark" ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+          const icon =
+            theme === "dark"
+              ? '<i class="fa-solid fa-sun"></i>'
+              : '<i class="fa-solid fa-moon"></i>';
 
           if (toggleBtn) toggleBtn.innerHTML = icon;
           if (mobileToggleBtn) mobileToggleBtn.innerHTML = icon;
@@ -2337,7 +2497,8 @@ Swal.fire({
         }
 
         if (toggleBtn) toggleBtn.addEventListener("click", handleThemeToggle);
-        if (mobileToggleBtn) mobileToggleBtn.addEventListener("click", handleThemeToggle);
+        if (mobileToggleBtn)
+          mobileToggleBtn.addEventListener("click", handleThemeToggle);
 
         window.getThemeCssVar = (name) =>
           getComputedStyle(htmlEl).getPropertyValue(name).trim();

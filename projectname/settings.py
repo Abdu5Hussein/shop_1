@@ -34,6 +34,8 @@ ALLOWED_HOSTS = [
     '102.213.181.243',
     'awferlk.com.ly',
     'www.awferlk.com.ly',
+    'localhost',
+    '127.0.0.1',
 ]
 
 
@@ -100,7 +102,7 @@ AUTH_USER_MODEL = 'main.User'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'awferlk_prod',
+        'NAME': 'sitex_development',
         'USER': 'sa',
         'PASSWORD': 'Akh!25_sitex_sql_2025#',
         'HOST': '102.213.181.243',
