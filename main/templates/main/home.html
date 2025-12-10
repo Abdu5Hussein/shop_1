@@ -492,14 +492,19 @@
     .search-input {
       width: 100%;
       padding: 22px 30px;
-      padding-left: 60px;
       font-size: 1.1rem;
       border: 2px solid var(--gray-200);
-      border-radius: var(--radius-full);
+      border-radius: 10px;
       background: var(--bg-search);
       color: var(--text-color);
       transition: all 0.3s ease;
       box-shadow: var(--shadow-sm);
+
+      {% if request.LANGUAGE_CODE|default:'en' == 'ar' %}
+        padding-right: 60px;
+      {% else %}
+        padding-left: 60px;
+      {% endif %}
     }
 
     .search-input:focus {
@@ -510,17 +515,23 @@
 
     .search-icon {
       position: absolute;
-      left: 25px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--gray-500);
       font-size: 1.2rem;
       pointer-events: none;
+
+      {% if request.LANGUAGE_CODE|default:'en' == 'ar' %}
+        left: auto;
+        right: 25px;
+      {% else %}
+        right: auto;
+        left: 25px;
+      {% endif %}
     }
 
     .search-btn {
       position: absolute;
-      right: 8px;
       top: 50%;
       transform: translateY(-50%);
       background: var(--primary);
@@ -531,6 +542,14 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
+
+      {% if request.LANGUAGE_CODE|default:'en' == 'ar' %}
+        left: 8px;
+        right: auto;
+      {% else %}
+        right: 8px;
+        left: auto;
+      {% endif %}
     }
 
     .search-btn:hover {
